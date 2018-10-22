@@ -16,13 +16,16 @@ class CreateExchange extends Migration
         Schema::create('exchanges', function(Blueprint $table)
         {
             $table->increments('id');
-            $table->string('exchange')->nullable()->unique('exchange');
+            $table->string('exchange');
+            $table->string('slug');
             $table->boolean('ccxt')->nullable()->default(0);
             $table->integer('use')->nullable()->default(0);
-            $table->text('request')->nullable();
             $table->string('url')->nullable();
-            $table->string('url_api')->nullable();
-            $table->string('url_doc')->nullable();
+            $table->text('url_api')->nullable();
+            $table->text('url_doc')->nullable();
+            $table->string('version')->nullable();
+            $table->boolean('has_ticker')->default(0);
+            $table->boolean('has_ohlcv')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

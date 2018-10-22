@@ -15,4 +15,5 @@ Create one folder and in that folder you can install it by the following command
 1. git clone https://github.com/deakzsolt/dbot.git
 2. composer update
 3. php artisan migrate
+4. php artisan db:seed
 ``` 

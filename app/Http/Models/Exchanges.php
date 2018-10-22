@@ -10,12 +10,15 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id
  * @property string $exchange
+ * @property string $slug
  * @property boolean $ccxt
  * @property integer $use
- * @property text $request
  * @property string $url
- * @property string $url_api
- * @property string $url_doc
+ * @property text $url_api
+ * @property text $url_doc
+ * @property string $version
+ * @property boolean $has_ticker
+ * @property boolean $has_ohlcv
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  */
@@ -28,12 +31,15 @@ class Exchanges extends Model
      */
     protected $fillable = array(
         'exchange',
+        'slug',
         'ccxt',
         'use',
-        'request',
         'url',
         'url_api',
         'url_doc',
+        'version',
+        'has_ticker',
+        'has_ohlcv'
     );
 
     /**
@@ -47,11 +53,13 @@ class Exchanges extends Model
         $names = array(
             'exchange' => 'Exchange Name',
             'ccxt' => 'Belongs to ccxt',
-            'use' => 'From',
-            'request' => 'Request type',
+            'use' => 'Is used',
             'url' => 'Url to exchange',
             'url_api' => 'Exchange API url',
             'url_doc' => 'Exchange url documentation',
+            'version' => 'API version',
+            'has_ticker' => 'Ticker usage',
+            'has_ohlcv' => 'OHLCV usage',
             'created_at' => 'Created at',
             'updated_at' => 'Updated at'
         );
