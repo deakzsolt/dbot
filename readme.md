@@ -9,6 +9,7 @@ never bother to do this for Windows. For Windows users you are on your own.
 ### Befor you start
 This project needs php extension trader, in version 7.2 it is automatically included while in older versions it need's to be enabled or added.
 Create one folder and in that folder you can install it by the following commands.
+Before you run the migration and seeder setup your .env file.
 
 ### Set up commands
 ```

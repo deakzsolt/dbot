@@ -11,6 +11,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-         $this->call(ImportExchanges::class);
+        $this->call(ImportExchanges::class);
+        $this->call(importTradingPairs::class);
     }
 }
