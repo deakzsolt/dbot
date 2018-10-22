@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Exchanges;
+use App\Ticker;
 use Illuminate\Console\Command;
 
 class DataImporter extends Command
@@ -37,6 +39,50 @@ class DataImporter extends Command
      */
     public function handle()
     {
-        //
+        $exchange = new \ccxt\poloniex (array (
+            'verbose' => false,
+            'timeout' => 30000,
+        ));
+
+        while(1) {
+            try {
+
+                $symbol = 'ETH/BTC';
+                $result = $exchange->fetch_ticker($symbol);
+                $exchangeId = Exchanges::where('slug', 'poloniex')->first()->id;
+
+                $ticker = new Ticker();
+                $ticker::updateOrCreate(
+                    array(
+                        'exchange_id' => $exchangeId,
+                        'symbol' => $symbol,
+                        'timestamp' => $result['timestamp'],
+                        'datetime' => date('Y-m-d H:i:s', strtotime($result['datetime'])),
+                        'high' => $result['high'],
+                        'low' => $result['low'],
+                        'bid' => $result['bid'],
+                        'ask' => $result['ask'],
+                        'vwap' => $result['vwap'],
+                        'open' => $result['open'],
+                        'close' => $result['close'],
+                        'last' => $result['last'],
+                        'change' => $result['change'],
+                        'percentage' => $result['percentage'],
+                        'average' => $result['average'],
+                        'baseVolume' => $result['baseVolume'],
+                        'quoteVolume' => $result['quoteVolume'],
+                    )
+                );
+
+            } catch (\ccxt\NetworkError $e) {
+                echo '[Network Error] ' . $e->getMessage () . "\n";
+            } catch (\ccxt\ExchangeError $e) {
+                echo '[Exchange Error] ' . $e->getMessage () . "\n";
+            } catch (Exception $e) {
+                echo '[Error] ' . $e->getMessage () . "\n";
+            }
+            sleep(5);
+        } // while
+
     }
 }
