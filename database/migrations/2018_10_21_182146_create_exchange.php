@@ -17,7 +17,7 @@ class CreateExchange extends Migration
         {
             $table->increments('id');
             $table->string('exchange');
-            $table->string('slug');
+            $table->string('slug')->unique();
             $table->boolean('ccxt')->nullable()->default(0);
             $table->integer('use')->nullable()->default(0);
             $table->string('url')->nullable();
