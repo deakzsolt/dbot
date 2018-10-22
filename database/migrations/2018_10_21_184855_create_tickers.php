@@ -47,6 +47,6 @@ class CreateTickers extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('tickers');
     }
 }
