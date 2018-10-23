@@ -4,6 +4,8 @@ namespace App\Console\Commands;
 
 use App\Models\Exchanges;
 use App\Ticker;
+use ccxt\ExchangeError;
+use ccxt\NetworkError;
 use Illuminate\Console\Command;
 
 class DataImporter extends Command
@@ -74,11 +76,11 @@ class DataImporter extends Command
                     )
                 );
 
-            } catch (\ccxt\NetworkError $e) {
+            } catch (NetworkError $e) {
                 echo '[Network Error] ' . $e->getMessage () . "\n";
-            } catch (\ccxt\ExchangeError $e) {
+            } catch (ExchangeError $e) {
                 echo '[Exchange Error] ' . $e->getMessage () . "\n";
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 echo '[Error] ' . $e->getMessage () . "\n";
             }
             sleep(5);
