@@ -13,5 +13,6 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(ImportExchanges::class);
         $this->call(importTradingPairs::class);
+        $this->call(insertOptions::class);
     }
 }
