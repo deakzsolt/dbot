@@ -19,3 +19,7 @@ Before you run the migration and seeder setup your .env file.
 4. php artisan db:seed
 5. echo "* * * * * `which php` `pwd`/artisan schedule:run >> /dev/null 2>&1" | /usr/bin/crontab
 ``` 
+
+___
+> This project is still under development and it is not 100% functional!
+___

@@ -64,7 +64,7 @@ class DataImporter extends Command
                             array(
                                 'exchange_id' => $exchangeId,
                                 'symbol' => $symbol,
-                                'timestamp' => $result['timestamp'],
+                                'timestamp' => intval($result['timestamp'] / 1000),
                                 'datetime' => date('Y-m-d H:i:s', strtotime($result['datetime'])),
                                 'high' => $result['high'],
                                 'low' => $result['low'],
