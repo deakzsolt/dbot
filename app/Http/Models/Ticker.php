@@ -89,4 +89,14 @@ class Ticker extends Model
 
         return $names[$attribute];
     }
+
+    /**
+     * Return distinct trading pairs
+     *
+     * @return mixed
+     */
+    public static function getPairs()
+    {
+        return Ticker::select('symbol')->distinct()->get();
+    }
 }
