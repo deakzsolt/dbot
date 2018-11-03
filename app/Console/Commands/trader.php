@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Ticker;
+use App\Trades;
 use Illuminate\Console\Command;
 use App\Traits\DataProcessing;
 use App\Traits\Strategies;
@@ -62,9 +63,25 @@ class trader extends Command
                 switch($response['state']) {
                     case 1:
                         $state = "<fg=green>".$response['state']."</>";
+
+                        $trade = new Trades();
+                        $trade->exchange_id = 111;
+                        $trade->symbol = $pairs['symbol'];
+                        $trade->order = 'buy';
+                        $trade->status = 'open';
+                        $trade->save();
+
                         break;
                     case -1:
                         $state = "<fg=red>".$response['state']."</>";
+
+                        $trade = new Trades();
+                        $trade->exchange_id = 111;
+                        $trade->symbol = $pairs['symbol'];
+                        $trade->order = 'sell';
+                        $trade->status = 'open';
+                        $trade->save();
+
                         break;
                     case 0:
                         $state = "<fg=yellow>".$response['state']."</>";
