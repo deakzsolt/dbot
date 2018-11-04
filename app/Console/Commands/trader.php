@@ -57,7 +57,7 @@ class trader extends Command
             $data = array();
             foreach(Ticker::getPairs() as $pairs) {
                 $headers[] = $pairs['symbol'];
-                $datas = $this->getLatestData($pairs['symbol'],200,'1h');
+                $datas = $this->getLatestData($pairs['symbol'],228,'1h');
                 $response = $this->strategy_sma_stoch_rsi($datas[111]);
 
                 switch($response['state']) {

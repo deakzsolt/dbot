@@ -39,30 +39,30 @@ trait Strategies
     public function strategy_sma_stoch_rsi($data, $indicator=false)
     {
         $price  = array_pop($data['close']);
-        $sma100  = $this->sma_maker($data['close'], 100);
-        $stoch = trader_stoch($data['high'], $data['low'], $data['close'], 8, 3, TRADER_MA_TYPE_SMA, 3, TRADER_MA_TYPE_SMA);
+        $sma150  = $this->sma_maker($data['close'], 150);
+        $stoch = trader_stoch($data['high'], $data['low'], $data['close'], 14, 3, TRADER_MA_TYPE_SMA, 3, TRADER_MA_TYPE_SMA);
         $slowk = $stoch[0];
         $slowd = $stoch[1];
         $slowk = array_pop($slowk);
         $slowd = array_pop($slowd);
-        $rsi = trader_rsi ($data['close'], 3);
+        $rsi = trader_rsi ($data['close'], 14);
         $rsi = array_pop($rsi);
         $return = array(
             'strategy' => 'sma_stoch_rsi',
             'price' => $price,
-            'sma' => $sma100,
+            'sma' => $sma150,
             'slowk' => $slowk,
             'slowd' => $slowd,
             'rsi' => $rsi,
             'side' => '',
             'state' => 0
         );
-        if ($price > $sma100 && $rsi < 20 && $slowk > 70 && $slowk > $slowd) {
+        if ($price > $sma150 && $rsi < 20 && $slowk > 70 && $slowk > $slowd) {
             $return['side'] = 'long';
             $return['state'] = 1;
             return ($indicator ? 1 : $return);
         } // if
-        if ($price < $sma100 && $rsi > 80 && $slowk > 70 && $slowk < $slowd) {
+        if ($price < $sma150 && $rsi > 80 && $slowk > 70 && $slowk < $slowd) {
             $return['side'] = 'short';
             $return['state'] = -1;
             return ($indicator ? -1 : $return);
