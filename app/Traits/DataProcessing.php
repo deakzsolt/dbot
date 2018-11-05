@@ -17,7 +17,7 @@ trait DataProcessing
      *
      * @return array
      */
-    public function organizePairData($datas, $limit=999)
+    private function organizePairData($datas, $limit=999)
     {
         $ret = array();
         foreach ($datas as $data) {
@@ -38,49 +38,40 @@ trait DataProcessing
         return $ret;
     }
 
+    /**
+     * Returns seconds on expected 1m,1h symbols
+     *
+     * @param $periodSize
+     * @return array
+     */
+    private function periodSize($periodSize) {
+
+        $secondsPerUnit = array(
+            's' => 1,
+            'm' => 60,
+            'h' => 3600,
+            'd' => 86400,
+            'w' => 604800
+        );
+
+        $time = preg_split('/(?<=[0-9])(?=[a-z]+)/i',$periodSize);
+
+        $seconds = $time[0]*$secondsPerUnit[$time[1]];
+        $timescale = 0;
+        return array(
+            'timescale' => $timescale,
+            'timeslice' => $seconds ?? 0
+        );
+    }
+
     public function getLatestData($pair='BTC/USD', $limit=168, $periodSize='1m') {
-        $timeslice = 60;
-        switch($periodSize) {
-            case '1m':
-                $timescale = '1 minute';
-                $timeslice = 60;
-                break;
-            case '5m':
-                $timescale = '5 minutes';
-                $timeslice = 300;
-                break;
-            case '10m':
-                $timescale = '10 minutes';
-                $timeslice = 600;
-                break;
-            case '15m':
-                $timescale = '15 minutes';
-                $timeslice = 900;
-                break;
-            case '30m':
-                $timescale = '30 minutes';
-                $timeslice = 1800;
-                break;
-            case '1h':
-                $timescale = '1 hour';
-                $timeslice = 3600;
-                break;
-            case '4h':
-                $timescale = '4 hours';
-                $timeslice = 14400;
-                break;
-            case '1d':
-                $timescale = '1 day';
-                $timeslice = 86400;
-                break;
-            case '1w':
-                $timescale = '1 week';
-                $timeslice = 604800;
-                break;
-        }
+
+        $time = $this->periodSize($periodSize);
+        $timeSlice = $time['timeslice'];
+
         $current_time = time();
 
-        $offset = ($current_time - ($timeslice * $limit)) -1;
+        $offset = ($current_time - ($timeSlice * $limit)) -1;
 
         $results = DB::select(DB::raw("
               SELECT 
@@ -90,7 +81,7 @@ trait DataProcessing
                 SUBSTRING_INDEX(GROUP_CONCAT(CAST(bid AS CHAR) ORDER BY bid), ',', 1 ) AS `low`,
                 SUBSTRING_INDEX(GROUP_CONCAT(CAST(bid AS CHAR) ORDER BY created_at DESC), ',', 1 ) AS `close`,
                 SUM(basevolume) AS volume,
-                ROUND((CEILING(UNIX_TIMESTAMP(`created_at`) / $timeslice) * $timeslice)) AS buckettime,
+                ROUND((CEILING(UNIX_TIMESTAMP(`created_at`) / $timeSlice) * $timeSlice)) AS buckettime,
                 round(AVG(bid),11) AS avgbid,
                 round(AVG(ask),11) AS avgask,
                 AVG(baseVolume) AS avgvolume
