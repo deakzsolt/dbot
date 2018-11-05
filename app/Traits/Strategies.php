@@ -40,13 +40,13 @@ trait Strategies
     {
         $price  = array_pop($data['close']);
         $sma150  = $this->sma_maker($data['close'], 150);
-        $stoch = trader_stoch($data['high'], $data['low'], $data['close'], 14, 3, TRADER_MA_TYPE_SMA, 3, TRADER_MA_TYPE_SMA);
+        $stoch = trader_stoch($data['high'], $data['low'], $data['close'], 10, 3, TRADER_MA_TYPE_SMA, 3, TRADER_MA_TYPE_SMA);
         $slowk = $stoch[0];
         $slowd = $stoch[1];
-        $slowk = array_pop($slowk);
-        $slowd = array_pop($slowd);
+        $slowk = @array_pop($slowk);
+        $slowd = @array_pop($slowd);
         $rsi = trader_rsi ($data['close'], 14);
-        $rsi = array_pop($rsi);
+        $rsi = @array_pop($rsi);
         $return = array(
             'strategy' => 'sma_stoch_rsi',
             'price' => $price,

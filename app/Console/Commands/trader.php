@@ -45,10 +45,10 @@ class trader extends Command
     {
 
         $this->info("------------------------------------------------------------------");
-        $this->info("This is just an example when it should trade");
-        $this->info("1 buy signal");
-        $this->info("-1 sell signal");
-        $this->info("0 do nothing");
+        $this->info("  This is just an example when it should trade");
+        $this->info("  1 buy signal");
+        $this->info("  -1 sell signal");
+        $this->info("  0 do nothing");
         $this->info("------------------------------------------------------------------\n");
 
         while(1) {
