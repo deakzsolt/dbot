@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\DB;
 
 trait DataProcessing
 {
+
+//    TODO refactor this to normal response
     /**
      * @param $datas
      *
@@ -57,20 +59,28 @@ trait DataProcessing
         $time = preg_split('/(?<=[0-9])(?=[a-z]+)/i',$periodSize);
 
         $seconds = $time[0]*$secondsPerUnit[$time[1]];
-        $timescale = 0;
+
+//        TODO add in timescale for pgsql
         return array(
-            'timescale' => $timescale,
+            'timescale' => 0,
             'timeslice' => $seconds ?? 0
         );
     }
 
+    /**
+     * Returns latest data
+     *
+     * @param string $pair
+     * @param int $limit
+     * @param string $periodSize
+     * @return array
+     */
     public function getLatestData($pair='BTC/USD', $limit=168, $periodSize='1m') {
 
         $time = $this->periodSize($periodSize);
         $timeSlice = $time['timeslice'];
 
         $current_time = time();
-
         $offset = ($current_time - ($timeSlice * $limit)) -1;
 
         $results = DB::select(DB::raw("
