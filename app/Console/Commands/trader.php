@@ -51,6 +51,9 @@ class trader extends Command
         $this->info("  0 do nothing");
         $this->info("------------------------------------------------------------------\n");
 
+
+//        TODO remove the exchange id and get use from th db
+//        TODO move this to test or example refactor this to indicator with buy and sell
         while(1) {
             $this->line("Date: ".date('Y-m-d H:i:s'));
             $headers = array();
@@ -90,10 +93,10 @@ class trader extends Command
 
                 $data[0][] = $response['strategy'];
                 $data[1][] = 'price: '.$response['price'];
-                $data[2][] = 'SMA: '.$response['sma'];
-                $data[3][] = '%K: '.$response['slowk'];
-                $data[4][] = '%D: '.$response['slowd'];
-                $data[5][] = 'RSI: '.$response['rsi'];
+                $data[2][] = 'SMA: <fg='.$response['colors']['sma'].'>'.$response['sma'].'</>';
+                $data[3][] = '%K: <fg='.$response['colors']['slowk'].'>'.$response['slowk'].'</>';
+                $data[4][] = '%D: <fg='.$response['colors']['slowd'].'>'.$response['slowd'].'</>';
+                $data[5][] = 'RSI: <fg='.$response['colors']['rsi'].'>'.$response['rsi'].'</>';
                 $data[6][] = $response['side'];
                 $data[7][] = $state;
             } // foreach

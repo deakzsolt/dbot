@@ -13,6 +13,7 @@ class ImportExchanges extends Seeder
      */
     public function run()
     {
+//        TODO activate one exchange
         foreach (Exchange::$exchanges as $exchange) {
             $className = '\ccxt\\' . $exchange;
             $class = new $className;

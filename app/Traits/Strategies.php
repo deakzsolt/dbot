@@ -12,13 +12,14 @@ const TRADER_MA_TYPE_SMA = 3;
 
 trait Strategies
 {
-
     /**
-     * @param      $data
-     * @param      $period
-     * @param bool $prior
+     * Returns average price
+     * use same amount of data as period
      *
-     * @return mixed
+     * @param $data
+     * @param $period
+     * @param bool $prior
+     * @return int|mixed
      */
     private function sma_maker($data, $period, $prior=false)
     {
@@ -49,11 +50,26 @@ trait Strategies
             'strategy' => 'sma_stoch_rsi',
             'price' => $price,
             'sma' => $sma150,
-            'slowk' => $slowk,
-            'slowd' => $slowd,
-            'rsi' => $rsi,
+            'slowk' => $slowk ?? 0,
+            'slowd' => $slowd ?? 0,
+            'rsi' => $rsi ?? 0,
             'side' => '',
             'state' => 0
+        );
+
+        if ($rsi < 20) {
+            $rsiColor = 'green';
+        } elseif ($rsi > 80) {
+            $rsiColor = 'red';
+        } else {
+            $rsiColor = 'yellow';
+        } // if
+
+        $return['colors'] = array(
+            'sma' => $price > $sma150 ? 'green' : 'red',
+            'slowk' => $slowk > 70 ? 'green' : 'red',
+            'slowd' => $slowk > $slowd ? 'green' : 'red',
+            'rsi' =>  $rsiColor
         );
 
         if ($price > $sma150 && $rsi < 20 && $slowk > 70 && $slowk > $slowd) {
@@ -69,5 +85,10 @@ trait Strategies
         } // if
 
         return ($indicator ? 0 : $return);
+    }
+
+    public function strategy_sma_stoch($data, $indicator=false)
+    {
+//        TODO create SMA Stochastic strategy
     }
 }
