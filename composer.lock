@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "651f226299d2f95fb61e9209585450b5",
+    "content-hash": "71b80832929ea6faa00247a8bebfd2af",
     "packages": [
         {
             "name": "ccxt/ccxt",
@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ccxt/ccxt.git",
-                "reference": "3f3c44afe6030347f5f9b29075944635b1d7ff19"
+                "reference": "767ccc97fd8d835f986b17f7547bd073f62c979a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ccxt/ccxt/zipball/3f3c44afe6030347f5f9b29075944635b1d7ff19",
-                "reference": "3f3c44afe6030347f5f9b29075944635b1d7ff19",
+                "url": "https://api.github.com/repos/ccxt/ccxt/zipball/767ccc97fd8d835f986b17f7547bd073f62c979a",
+                "reference": "767ccc97fd8d835f986b17f7547bd073f62c979a",
                 "shasum": ""
             },
             "require": {
@@ -267,7 +267,7 @@
                 "zec",
                 "zerocoin"
             ],
-            "time": "2018-11-05T18:06:10+00:00"
+            "time": "2018-11-06T17:15:55+00:00"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -4839,7 +4839,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.1.3"
+        "php": "^7.2.10"
     },
     "platform-dev": []
 }

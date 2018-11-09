@@ -8,48 +8,33 @@
 
 namespace App\Traits;
 
-const TRADER_MA_TYPE_SMA = 3;
-
 trait Strategies
 {
     /**
-     * Returns average price
-     * use same amount of data as period
-     *
-     * @param $data
-     * @param $period
-     * @param bool $prior
-     * @return int|mixed
-     */
-    private function sma_maker($data, $period, $prior=false)
-    {
-        $smaArray = trader_sma($data, $period);
-        $sma = @array_pop($smaArray) ?? 0;
-        $sma_prior = @array_pop($smaArray) ?? 0;
-        return ($prior ? $sma_prior : $sma);
-    }
-
-    /**
      * Basic Strategy with SMA, Stochastic and RSI
      * this should go with data on 1h
+     *
+     * Set $indicator to true ???
      *
      * @param $data
      * @param bool $indicator
      * @return array|int
      */
-    public function strategy_sma_stoch_rsi($data, $indicator=false)
+    public function strategy_sma_stoch_rsi($data, $indicator = false)
     {
-        $price  = array_pop($data['close']);
-        $sma150  = $this->sma_maker($data['close'], 150);
-        $stoch = trader_stoch($data['high'], $data['low'], $data['close'], 10, 3, TRADER_MA_TYPE_SMA, 3, TRADER_MA_TYPE_SMA);
+        $price = array_pop($data['close']);
+        $sma = @array_pop(trader_sma($data['close'], 150)) ?? 0;
+        $ema = @array_pop($this->ema($data['close'], 150)) ?? 0;
+        $stoch = trader_stoch($data['high'], $data['low'], $data['close'], 14, 3, config('dbot.type.sma'), 3, config('dbot.type.sma'));
         $slowk = @array_pop($stoch[0]);
         $slowd = @array_pop($stoch[1]);
-        $rsi = @array_pop(trader_rsi ($data['close'], 14));
+        $rsi = @array_pop(trader_rsi($data['close'], 14));
 
         $return = array(
             'strategy' => 'sma_stoch_rsi',
             'price' => $price,
-            'sma' => $sma150,
+            'sma' => $sma,
+            'ema' => $ema,
             'slowk' => $slowk ?? 0,
             'slowd' => $slowd ?? 0,
             'rsi' => $rsi ?? 0,
@@ -57,28 +42,36 @@ trait Strategies
             'state' => 0
         );
 
-        if ($rsi < 20) {
+        if ($rsi < 30) {
             $rsiColor = 'green';
-        } elseif ($rsi > 80) {
+        } elseif ($rsi > 70) {
             $rsiColor = 'red';
         } else {
-            $rsiColor = 'yellow';
+            $rsiColor = 'white';
+        } // if
+
+        if ($slowk < 30) {
+            $slowkColor = 'green';
+        } elseif ($slowk > 70) {
+            $slowkColor = 'red';
+        } else {
+            $slowkColor = 'white';
         } // if
 
         $return['colors'] = array(
-            'sma' => $price > $sma150 ? 'green' : 'red',
-            'slowk' => $slowk > 70 ? 'green' : 'red',
+            'sma' => $price > $sma ? 'green' : 'red',
+            'slowk' => $slowkColor,
             'slowd' => $slowk > $slowd ? 'green' : 'red',
-            'rsi' =>  $rsiColor
+            'rsi' => $rsiColor
         );
 
-        if ($price > $sma150 && $rsi < 20 && $slowk > 70 && $slowk > $slowd) {
+        if ($price > $sma && $rsi < 30 && $slowk < 30 && $slowk > $slowd) {
             $return['side'] = 'long';
             $return['state'] = 1;
             return ($indicator ? 1 : $return);
         } // if
 
-        if ($price < $sma150 && $rsi > 80 && $slowk > 70 && $slowk < $slowd) {
+        if ($price < $sma && $rsi > 70 && $slowk > 70 && $slowk < $slowd) {
             $return['side'] = 'short';
             $return['state'] = -1;
             return ($indicator ? -1 : $return);
@@ -87,8 +80,47 @@ trait Strategies
         return ($indicator ? 0 : $return);
     }
 
-    public function strategy_sma_stoch($data, $indicator=false)
+    public function strategy_sma_stoch($data, $indicator = false)
     {
 //        TODO create SMA Stochastic strategy
+    }
+
+    public function strategy_ema_stoch_rsi($data, $indicator = false)
+    {
+
+    }
+
+    /* trader_ema in wrong calculate value
+    this return just simple moving avrage
+    for get ema correct use this code
+    $number is data array and $n is number of period
+    example:
+    $number[0]    => last value
+    $number[n]    =>first value */
+
+    /**
+     * Exponential Moving Average
+     * as the trader_ema returns the same result as sma we need this custom calculation
+     *
+     * @param array $numbers
+     * @param int $n
+     * @return array
+     */
+    function ema(array $numbers, int $n): array
+    {
+        $numbers = array_reverse($numbers);
+        $m = count($numbers);
+        $α = 2 / ($n + 1);
+        $EMA = [];
+
+        // Start off by seeding with the first data point
+        $EMA[] = $numbers[0];
+
+        // Each day after: EMAtoday = α⋅xtoday + (1-α)EMAyesterday
+        for ($i = 1; $i < $m; $i++) {
+            $EMA[] = ($α * $numbers[$i]) + ((1 - $α) * $EMA[$i - 1]);
+        }
+        $EMA = array_reverse($EMA);
+        return $EMA;
     }
 }

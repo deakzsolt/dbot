@@ -94,11 +94,12 @@ class trader extends Command
                 $data[0][] = $response['strategy'];
                 $data[1][] = 'price: '.$response['price'];
                 $data[2][] = 'SMA: <fg='.$response['colors']['sma'].'>'.$response['sma'].'</>';
-                $data[3][] = '%K: <fg='.$response['colors']['slowk'].'>'.$response['slowk'].'</>';
-                $data[4][] = '%D: <fg='.$response['colors']['slowd'].'>'.$response['slowd'].'</>';
-                $data[5][] = 'RSI: <fg='.$response['colors']['rsi'].'>'.$response['rsi'].'</>';
-                $data[6][] = $response['side'];
-                $data[7][] = $state;
+                $data[3][] = 'EMA: '.$response['ema'];
+                $data[4][] = '%K: <fg='.$response['colors']['slowk'].'>'.$response['slowk'].'</>';
+                $data[5][] = '%D: <fg='.$response['colors']['slowd'].'>'.$response['slowd'].'</>';
+                $data[6][] = 'RSI: <fg='.$response['colors']['rsi'].'>'.$response['rsi'].'</>';
+                $data[7][] = $response['side'];
+                $data[8][] = $state;
             } // foreach
 
             $this->table($headers, $data);
