@@ -15,12 +15,17 @@ class CreateTrades extends Migration
     {
         Schema::create('trades', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('order_id');
             $table->integer('exchange_id')->nullable();
             $table->string('symbol', 90)->nullable();
+            $table->bigInteger('timestamp')->nullable();
+            $table->string('strategy');
             $table->string('order');
             $table->string('status');
-            $table->bigInteger('timestamp')->nullable();
-            $table->dateTime('datetime')->nullable();
+            $table->boolean('order_executed')->default(false);
+            $table->float('price',10,0);
+            $table->float('profit',10,0)->nullable();
+            $table->float('percentage', 10, 0)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

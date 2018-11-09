@@ -14,8 +14,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property boolean $ccxt
  * @property integer $use
  * @property string $url
- * @property text $url_api
- * @property text $url_doc
+ * @property string $url_api
+ * @property string $url_doc
  * @property string $version
  * @property boolean $has_ticker
  * @property boolean $has_ohlcv
