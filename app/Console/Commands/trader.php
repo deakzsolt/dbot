@@ -70,8 +70,11 @@ class trader extends Command
                         $trade = new Trades();
                         $trade->exchange_id = 111;
                         $trade->symbol = $pairs['symbol'];
+                        $trade->strategy = 'sma_stoch_rsi';
+                        $trade->price = $response['price'];
                         $trade->order = 'buy';
                         $trade->status = 'open';
+                        $trade->order_executed = true;
                         $trade->save();
 
                         break;
@@ -81,8 +84,11 @@ class trader extends Command
                         $trade = new Trades();
                         $trade->exchange_id = 111;
                         $trade->symbol = $pairs['symbol'];
+                        $trade->strategy = 'sma_stoch_rsi';
+                        $trade->price = $response['price'];
                         $trade->order = 'sell';
                         $trade->status = 'open';
+                        $trade->order_executed = true;
                         $trade->save();
 
                         break;

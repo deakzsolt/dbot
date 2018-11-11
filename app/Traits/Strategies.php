@@ -10,6 +10,11 @@ namespace App\Traits;
 
 trait Strategies
 {
+    public $strategyNames = array(
+        'sma_stoch_rsi',
+        'sma_stoch',
+        'ema_stoch_rsi'
+    );
     /**
      * Basic Strategy with SMA, Stochastic and RSI
      * this should go with data on 1h
