@@ -23,7 +23,7 @@ class DataImporter extends Command
      *
      * @var string
      */
-    protected $description = 'This imports data from exchanges.';
+    protected $description = 'Imports data from exchanges, this should be used in the cron.';
 
     /**
      * Create a new command instance.

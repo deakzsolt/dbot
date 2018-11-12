@@ -69,6 +69,7 @@ class trader extends Command
 
                         $trade = new Trades();
                         $trade->exchange_id = 111;
+                        $trade->order_id = '123';
                         $trade->symbol = $pairs['symbol'];
                         $trade->strategy = 'sma_stoch_rsi';
                         $trade->price = $response['price'];
@@ -83,6 +84,7 @@ class trader extends Command
 
                         $trade = new Trades();
                         $trade->exchange_id = 111;
+                        $trade->order_id = '123';
                         $trade->symbol = $pairs['symbol'];
                         $trade->strategy = 'sma_stoch_rsi';
                         $trade->price = $response['price'];

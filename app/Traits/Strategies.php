@@ -28,11 +28,15 @@ trait Strategies
     public function strategy_sma_stoch_rsi($data, $indicator = false)
     {
         $price = array_pop($data['close']);
+
         $sma = @array_pop(trader_sma($data['close'], 150)) ?? 0;
         $ema = @array_pop($this->ema($data['close'], 150)) ?? 0;
-        $stoch = trader_stoch($data['high'], $data['low'], $data['close'], 14, 3, config('dbot.type.sma'), 3, config('dbot.type.sma'));
+
+        $smoothness = config('dbot.type.sma');
+        $stoch = trader_stoch($data['high'], $data['low'], $data['close'], 14, 3, $smoothness, 3, $smoothness);
         $slowk = @array_pop($stoch[0]);
         $slowd = @array_pop($stoch[1]);
+
         $rsi = @array_pop(trader_rsi($data['close'], 14));
 
 //        TODO EMA is here for testing only remove when we have more information
