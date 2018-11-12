@@ -57,22 +57,17 @@ class HistoryDataImport extends Command
 
         try {
             foreach ($symbols as $symbol) {
-                $this->line("Updating $symbol data...");
+                $this->comment("Updating $symbol data...");
 
-                $startDate = date('Y-m-d H:i:s',strtotime('-2 days'));
+                $startDate = date('Y-m-d h:i:s',strtotime('-7 days'));
                 $startTimestamp = strtotime($startDate);
 
-                $this->line($startDate);
-                $this->line($startTimestamp);
+                $endDate = date('Y-m-d h:i:s');
+                $endTimestamp = strtotime($endDate);
 
-                $endDate = date('Y-m-d H:i:s');
-                $endTimestamp = strtotime($endDate)*1000;
+                $this->line("start=$startDate($startTimestamp) end=$endDate($endTimestamp)");
 
-                $this->line($endDate);
-                $this->line($endTimestamp)*1000;
-
-                $url = "https://poloniex.com/public?command=returnChartData&currencyPair=$symbol&start=$startDate&end=$endDate&period=$this->period";
-
+                $url = "https://poloniex.com/public?command=returnChartData&currencyPair=$symbol&start=$startTimestamp&end=$endTimestamp&period=$this->period";
                 $json = file_get_contents($url);
                 $data = json_decode($json);
 
@@ -91,22 +86,26 @@ class HistoryDataImport extends Command
                 } // foreach
 
                 $bar->finish();
-                $this->info("\nUPDATED $symbol for date: \n\n");
             } // foreach
         }
         catch (\Exception $e) {
             $this->error($e);
         }
 
-        $this->info("--------------------------------------------------------------------------------------------");
+        $this->info("\n\n--------------------------------------------------------------------------------------------");
         $this->info("Exiting: all data imported.");
         $this->info("Have a great day.");
         $this->info("Bye.");
 
         /*
          *  returnChartData
+         * https://poloniex.com/support/api/#reference_currencypairs
 
-Returns candlestick chart data. Required GET parameters are "currencyPair", "period" (candlestick period in seconds; valid values are 300, 900, 1800, 7200, 14400, and 86400), "start", and "end". "Start" and "end" are given in UNIX timestamp format and used to specify the date range for the data returned. Sample output:
+Returns candlestick chart data.
+        Required GET parameters are "currencyPair", "period"
+        (candlestick period in seconds; valid values are 300, 900, 1800, 7200, 14400, and 86400),
+        "start", and "end". "Start" and "end" are given in UNIX timestamp format and used to specify the date range
+        for the data returned. Sample output:
 
 [
   {
