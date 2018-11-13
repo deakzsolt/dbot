@@ -43,5 +43,11 @@ return [
             'poloniex'
         ],
         'trade' => 0
-    )
+    ),
+
+    'poloniex' => [
+        'chart_data' => 'https://poloniex.com/public?command=returnChartData&currencyPair=%1$s&start=%2$s&end=%3$s&period=%4$s',
+        'trading_pairs' => 'https://poloniex.com/support/api/#reference_currencypairs',
+        'period' => [300, 900, 1800, 7200, 14400, 86400]
+    ]
 ];

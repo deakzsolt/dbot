@@ -3,7 +3,9 @@
 namespace App\Console\Commands;
 
 use App\Models\Exchanges;
+use ccxt\Exchange;
 use Illuminate\Console\Command;
+use App\Ticker;
 
 class HistoryDataImport extends Command
 {
@@ -57,7 +59,7 @@ class HistoryDataImport extends Command
 
         try {
             foreach ($symbols as $symbol) {
-                $this->comment("Updating $symbol data...");
+                $this->comment("\nUpdating $symbol data...");
 
                 $startDate = date('Y-m-d h:i:s',strtotime('-7 days'));
                 $startTimestamp = strtotime($startDate);
@@ -65,22 +67,52 @@ class HistoryDataImport extends Command
                 $endDate = date('Y-m-d h:i:s');
                 $endTimestamp = strtotime($endDate);
 
-                $this->line("start=$startDate($startTimestamp) end=$endDate($endTimestamp)");
+                $this->line("start=$startDate($startTimestamp) end=$endDate($endTimestamp)\n");
 
-                $url = "https://poloniex.com/public?command=returnChartData&currencyPair=$symbol&start=$startTimestamp&end=$endTimestamp&period=$this->period";
+                $url = sprintf(__(config('dbot.'.$exchange.'.chart_data')),$symbol,$startTimestamp,$endTimestamp,$this->period);
                 $json = file_get_contents($url);
-                $data = json_decode($json);
+                $response = json_decode($json);
 
-                if (isset($data->error)) {
-                    $this->error("ERROR: ".$data->error);
+                if (isset($response->error)) {
+                    $this->error("ERROR: ".$response->error);
                     exit();
                 } // if
 
-                $bar = $this->output->createProgressBar(count($data));
+                $bar = $this->output->createProgressBar(count($response));
                 $bar->start();
 
-                foreach ($data as $val) {
-//                    TODO insert into db finish here
+                foreach ($response as $data) {
+                    $change = number_format($data->close-$data->open,16);
+                    $percentage = $change/$data->close*100;
+                    $average = ($data->close+$data->open)/2;
+
+                    $ccxt = new Exchange();
+                    list ($quoteId, $baseId) = explode ('_', $symbol);
+                    $base = $ccxt->common_currency_code($baseId);
+                    $quote = $ccxt->common_currency_code($quoteId);
+                    $ccxtSymbol = $base . '/' . $quote;
+
+                    $ticker = new Ticker();
+                    $ticker::updateOrCreate(
+                        array(
+                            'exchange_id' => $exchangeId,
+                            'symbol' => $ccxtSymbol,
+                            'timestamp' => $data->date,
+                            'datetime' => date('Y-m-d H:i:s', $data->date),
+                            'high' => $data->high,
+                            'low' => $data->low,
+                            'vwap' => NULL,
+                            'open' => $data->open,
+                            'close' => $data->close,
+                            'last' => $data->close,
+                            'change' => $change,
+                            'percentage' => $percentage,
+                            'average' => $average,
+                            'baseVolume' => $data->volume,
+                            'quoteVolume' => $data->quoteVolume,
+                            'created_at' => date('Y-m-d H:i:s', $data->date)
+                        )
+                    );
                     $bar->advance();
                     usleep(10000);
                 } // foreach
@@ -96,33 +128,5 @@ class HistoryDataImport extends Command
         $this->info("Exiting: all data imported.");
         $this->info("Have a great day.");
         $this->info("Bye.");
-
-        /*
-         *  returnChartData
-         * https://poloniex.com/support/api/#reference_currencypairs
-
-Returns candlestick chart data.
-        Required GET parameters are "currencyPair", "period"
-        (candlestick period in seconds; valid values are 300, 900, 1800, 7200, 14400, and 86400),
-        "start", and "end". "Start" and "end" are given in UNIX timestamp format and used to specify the date range
-        for the data returned. Sample output:
-
-[
-  {
-    "date": 1405699200,
-    "high": 0.0045388,
-    "low": 0.00403001,
-    "open": 0.00404545,
-    "close": 0.00427592,
-    "volume": 44.11655644,
-    "quoteVolume": 10259.29079097,
-    "weightedAverage": 0.00430015
-  },
-  ...
-]
-
-Call: https://poloniex.com/public?command=returnChartData&currencyPair=BTC_XMR&start=1405699200&end=9999999999&period=14400
-
-         */
     }
 }
