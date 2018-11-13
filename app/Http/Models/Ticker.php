@@ -11,8 +11,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property integer $exchange_id
  * @property string $symbol
- * @property bigInteger $timestamp
- * @property dateTime $datetime
+ * @property int $timestamp
+ * @property int $datetime
  * @property float $high
  * @property float $low
  * @property float $bid
