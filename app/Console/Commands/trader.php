@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Exchanges;
 use App\Ticker;
 use App\Trades;
 use Illuminate\Console\Command;
@@ -51,6 +52,8 @@ class trader extends Command
         $this->info("  0 do nothing");
         $this->info("------------------------------------------------------------------\n");
 
+        $exchangeId = Exchanges::where('slug','poloniex')->first()->id;
+
 
 //        TODO remove the exchange id and get use from th db
 //        TODO move this to test or example refactor this to indicator with buy and sell
@@ -61,14 +64,14 @@ class trader extends Command
             foreach(Ticker::getPairs() as $pairs) {
                 $headers[] = $pairs['symbol'];
                 $datas = $this->getLatestData($pairs['symbol'],228,'1h');
-                $response = $this->strategy_sma_stoch_rsi($datas[111]);
+                $response = $this->strategy_sma_stoch_rsi($datas[$exchangeId]);
 
                 switch($response['state']) {
                     case 1:
                         $state = "<fg=green>".$response['state']."</>";
 
                         $trade = new Trades();
-                        $trade->exchange_id = 111;
+                        $trade->exchange_id = $exchangeId;
                         $trade->order_id = '123';
                         $trade->symbol = $pairs['symbol'];
                         $trade->strategy = 'sma_stoch_rsi';
@@ -83,7 +86,7 @@ class trader extends Command
                         $state = "<fg=red>".$response['state']."</>";
 
                         $trade = new Trades();
-                        $trade->exchange_id = 111;
+                        $trade->exchange_id = $exchangeId;
                         $trade->order_id = '123';
                         $trade->symbol = $pairs['symbol'];
                         $trade->strategy = 'sma_stoch_rsi';
