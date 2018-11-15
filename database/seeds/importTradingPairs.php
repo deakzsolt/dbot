@@ -30,7 +30,7 @@ class importTradingPairs extends Seeder
                     $tradingPair->save();
                 } // foreach
 
-                echo "\e[0;32m ".count($symbols) . "Symbols: " . implode(', ', $symbols) . "\e[0m\n";
+                echo "\e[0;32m ".count($symbols) . " - Symbols: " . implode(', ', $symbols) . "\e[0m\n";
             } catch (\Exception $e) {
                 echo "\033[31m [Error] " . $e->getMessage() . " \033[0m\n";
             }

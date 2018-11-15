@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 
 trait DataProcessing
 {
+    use TimeWrapper;
 
     /**
      * @param $datas
@@ -38,33 +39,6 @@ trait DataProcessing
             }
         }
         return $ret;
-    }
-
-    /**
-     * Returns seconds on expected 1m,1h symbols
-     *
-     * @param $periodSize
-     * @return array
-     */
-    private function periodSize($periodSize) {
-
-        $secondsPerUnit = array(
-            's' => 1,
-            'm' => 60,
-            'h' => 3600,
-            'd' => 86400,
-            'w' => 604800
-        );
-
-        $time = preg_split('/(?<=[0-9])(?=[a-z]+)/i',$periodSize);
-
-        $seconds = $time[0]*$secondsPerUnit[$time[1]];
-
-//        TODO add in timescale for pgsql
-        return array(
-            'timescale' => 0,
-            'timeslice' => $seconds ?? 0
-        );
     }
 
     /**

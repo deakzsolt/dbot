@@ -5,12 +5,15 @@ namespace App\Console\Commands;
 use App\Models\Exchanges;
 use App\Models\Options;
 use App\Ticker;
+use App\Traits\TimeWrapper;
 use ccxt\ExchangeError;
 use ccxt\NetworkError;
 use Illuminate\Console\Command;
 
 class DataImporter extends Command
 {
+    use TimeWrapper;
+
     /**
      * The name and signature of the console command.
      *
@@ -59,13 +62,19 @@ class DataImporter extends Command
                         $result = $exchange->fetch_ticker($symbol);
                         $exchangeId = Exchanges::where('slug', 'poloniex')->first()->id;
 
+                        $datetime = date('Y-m-d H:i:s', strtotime($result['datetime']));
+                        $exchangeTimestamp = intval($result['timestamp'] / 1000);
+                        $time = $this->timeSequence($exchangeTimestamp);
+
                         $ticker = new Ticker();
                         $ticker::updateOrCreate(
                             array(
                                 'exchange_id' => $exchangeId,
                                 'symbol' => $symbol,
-                                'timestamp' => intval($result['timestamp'] / 1000),
-                                'datetime' => date('Y-m-d H:i:s', strtotime($result['datetime'])),
+                                'timestamp' => $time['timestamp'],
+                                'datetime' => $time['datetime'],
+                            ),
+                            array(
                                 'high' => $result['high'],
                                 'low' => $result['low'],
                                 'bid' => $result['bid'],

@@ -15,7 +15,7 @@ class insertOptions extends Seeder
             'DATA_IMPORTER' => array(
                 'poloniex' => array(
                     'BTC/USDT',
-                    'BTC/ETC',
+                    'ETC/BTC',
                     'ETH/USDT',
                     'ETC/USDT',
                     'ZEC/USDT',
