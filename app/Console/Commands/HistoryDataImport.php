@@ -50,7 +50,7 @@ class HistoryDataImport extends Command
 
         $this->info("--------------------------------------------------------------------------------------------");
         $this->info("This script by default loads 7 day data from selected exchange");
-        $this->info("");
+        $this->info("By default it imports in timeframe of 30 minutes");
         $this->info("--------------------------------------------------------------------------------------------\n");
 
         $symbols = explode(',',$this->argument('pair'));
@@ -67,7 +67,7 @@ class HistoryDataImport extends Command
                 $endDate = date('Y-m-d h:i:s');
                 $endTimestamp = strtotime($endDate);
 
-                $this->line("start=$startDate($startTimestamp) end=$endDate($endTimestamp)\n");
+                $this->line("start=$startDate($startTimestamp) end=$endDate($endTimestamp)");
 
                 $url = sprintf(__(config('dbot.'.$exchange.'.chart_data')),$symbol,$startTimestamp,$endTimestamp,$this->period);
                 $json = file_get_contents($url);
@@ -118,6 +118,7 @@ class HistoryDataImport extends Command
                 } // foreach
 
                 $bar->finish();
+                $this->line("\n");
             } // foreach
         }
         catch (\Exception $e) {
