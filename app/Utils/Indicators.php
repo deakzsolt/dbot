@@ -10,6 +10,37 @@ namespace App\Utils;
 
 class Indicators
 {
+	/**
+	 * Store all indicator names
+	 *
+	 * @var array
+	 */
+	public static $indicators = array(
+		'atr',
+		'bollingerBands',
+		'macd',
+		'rsi',
+		'stoch',
+		'stochf',
+		'awesome_oscillator',
+		'mfi',
+		'obv',
+		'sar',
+		'cci',
+		'cmo',
+		'aroonosc',
+		'adx',
+		'roc',
+		'willr',
+		'ultosc',
+		'hli',
+		'er',
+		'mmi',
+//		'hts',
+		'htl',
+		'httc',
+		'stochrsi'
+	);
 
 	/**
 	 * Average True Range (ATR)
@@ -837,6 +868,7 @@ class Indicators
 			return 0;
 		} // if
 
+//		TODO change trader_ema to other ema what is better as trader_ema is a sma
 		$macd_current = (array_pop($macd_raw) - array_pop($signal));
 		$ema = trader_ema($data['close'], 13);
 		$ema_current = array_pop($ema);
