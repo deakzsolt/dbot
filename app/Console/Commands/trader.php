@@ -111,6 +111,7 @@ class trader extends Command
                 $data[6][] = 'RSI: <fg='.$response['colors']['rsi'].'>'.$response['rsi'].'</>';
                 $data[7][] = $response['side'];
                 $data[8][] = $state;
+
             } // foreach
 
             $this->table($headers, $data);

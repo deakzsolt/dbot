@@ -12,6 +12,7 @@ use App\Models\Exchanges;
 use App\Utils\Indicators;
 use Illuminate\Console\Command;
 use App\Traits\DataProcessing;
+use App\Ticker;
 
 class TestIndicators extends Command
 {
@@ -41,22 +42,31 @@ class TestIndicators extends Command
 	{
 		$indicators = new Indicators();
 
-		$pair = 'BTC/USDT';
+		$pairs = Ticker::getPairs();
 
 		$exchangeId = Exchanges::where('slug','poloniex')->first()->id;
 
-		$data = $this->getLatestData($pair,228,'1h' );
+		while(1) {
+			$headers = array();
+			$body = array();
+			foreach ($pairs as $pair) {
+				$pair = $pair['symbol'];
+				$headers[] = $pair;
+				$data = $this->getLatestData($pair,228,'1h' );
 
-		$this->line($pair);
-		foreach ($indicators::$indicators as $indicator) {
-			$respons = $indicators->$indicator($data[$exchangeId]);
+				$i = 0;
+				foreach ($indicators::$indicators as $indicator) {
+					$respons = $indicators->$indicator($data[$exchangeId]);
 
-			$indicator = str_pad($indicator,20);
-			$color = ($respons > 0 ? "<bg=green>$indicator</>" : ($respons < 0 ? "<bg=red>$indicator</>" : $indicator));
+					$indicator = str_pad($indicator,20);
+					$body[$i][] = ($respons > 0 ? "<bg=green>$indicator</>" : ($respons < 0 ? "<bg=red>$indicator</>" : $indicator));
+					$i++;
+				} // foreach
+			} // foreach
 
-			$this->line($color);
-		} // foreach
-
-//		var_dump($responses);
+			$this->table($headers, $body);
+			sleep(5);
+//			system('clear');
+		} // while
 	}
 }
