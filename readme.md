@@ -35,6 +35,8 @@ Check the end of the installation and if it states that the extension must be ad
 In my case I did have to add the extension=trader.so to php.ini.
 When this is done open a new terminal window and test there with "php -m" command is the extension there.
 
+## Usage
+
 #### Import data
 Now when all is set we need data in order to start the trading bot.
 The import:history command expect's 2 parameters, pair and exchange. 
@@ -44,7 +46,14 @@ For example here is one command:
 php artisan import:history USDT_BTC,BTC_ETC,USDT_ETH,USDT_ETC,USDT_ZEC,BTC_ZEC,USDT_ZRX
 ```
 Check on the exchange from where the pairs are imported what are the predefined symbols for the API.
- 
+
+#### Test indicators
+Now we have at least 7 days data and we can go trough and check the indicators.
+This is good to see is all working and no error and also to gain a better understanding on signals.
+Run the following command in order to get a view in command line.
+```
+php artisan test:indicators
+```
 ___
 > This project is still under development and it is not 100% functional!
 ___
