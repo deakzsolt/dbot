@@ -1139,4 +1139,23 @@ class Indicators
 			} // if
 		} // if
 	}
+
+	/**
+	 * Directional Movement Index (MDI)
+	 *
+	 * @param     $data
+	 * @param int $period
+	 *
+	 * @return string
+	 */
+	public function mdi($data, $period = 14)
+	{
+		if (empty($data)) {
+			return "The data is empty! Provide some data";
+		} // if
+
+		$mdi = trader_dx($data['high'], $data['low'] , $data['close'], $period);
+
+		var_dump($mdi);
+	}
 }
