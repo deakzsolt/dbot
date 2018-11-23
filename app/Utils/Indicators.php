@@ -39,7 +39,8 @@ class Indicators
 //		'hts',
 		'htl',
 		'httc',
-		'stochrsi'
+		'stochrsi',
+		'dmi'
 	);
 
 	/**
@@ -1141,21 +1142,38 @@ class Indicators
 	}
 
 	/**
-	 * Directional Movement Index (MDI)
+	 * Directional Movement Index (DMI)
 	 *
 	 * @param     $data
 	 * @param int $period
 	 *
 	 * @return string
 	 */
-	public function mdi($data, $period = 14)
+	public function dmi($data, $period = 14)
 	{
 		if (empty($data)) {
 			return "The data is empty! Provide some data";
 		} // if
 
-		$mdi = trader_dx($data['high'], $data['low'] , $data['close'], $period);
+		/**
+		 * the trader_dx response makes no sense
+		 * or it should be used with adx
+		 */
+//		$mdi = trader_dx($data['high'], $data['low'] , $data['close'], $period);
 
-		var_dump($mdi);
+		/**
+		 * TODO this needs more research
+		 */
+		$high = array_reverse($data['high']);
+		$positiveDM = $high[0]-$high[1];
+
+		$low = array_reverse($data['low']);
+		$negativeDM = $low[0]-$low[1];
+
+		if ($positiveDM>$negativeDM) {
+			return 1;
+		} else {
+			return -1;
+		} // if
 	}
 }
