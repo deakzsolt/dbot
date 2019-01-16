@@ -36,11 +36,11 @@ class Indicators
 		'hli',
 		'er',
 		'mmi',
-//		'hts',
+		//		'hts',
 		'htl',
 		'httc',
 		'stochrsi',
-		'dmi'
+		'dmi',
 	);
 
 	/**
@@ -54,8 +54,8 @@ class Indicators
 	 * This algorithm uses ATR as a momentum strategy, but the same signal can be used for
 	 * a reversion strategy, since ATR doesn't indicate the price direction (like adx below)
 	 *
-	 * @param null   $data
-	 * @param int    $period
+	 * @param null $data
+	 * @param int  $period
 	 *
 	 * @return int
 	 */
@@ -114,8 +114,8 @@ class Indicators
 	 * When the Bollinger bands “squeeze”, it means that the market is very quiet, and a breakout is eminent.
 	 * Once a breakout occurs, we enter a trade on whatever side the price makes its breakout.
 	 *
-	 * @param null   $data
-	 * @param int    $period
+	 * @param null $data
+	 * @param int  $period
 	 *
 	 * @return int
 	 */
@@ -223,36 +223,36 @@ class Indicators
 	 *      TODO This will be for various backtesting and tests
 	 *      all periods are ranges of 2 to 100,000
 	 */
-//	public function macdext($pair = 'BTC/USD', $data = null, $fastPeriod = 12, $fastMAType = 0, $slowPeriod = 26, $slowMAType = 0, $signalPeriod = 9, $signalMAType = 0)
-//	{
-//		$fastMAType = $this->ma_type($fastMAType);
-//		$slowMAType = $this->ma_type($slowMAType);
-//		$signalMAType = $this->ma_type($signalMAType);
-//		if (empty($data)) {
-//			$data = $this->getRecentData($pair);
-//		}
-//		# Create the MACD signal and pass in the three parameters: fast period, slow period, and the signal.
-//		# we will want to tweak these periods later for now these are fine.
-//		$macd = trader_macdext($data['close'], $fastPeriod, $fastMAType, $slowPeriod, $slowMAType, $signalPeriod,
-//			$signalMAType);
-//		$macd_raw = $macd[0];
-//		$signal = $macd[1];
-//		$hist = $macd[2];
-//		if (!empty($macd)) {
-//			$macd = array_pop($macd[0]) - array_pop($macd[1]); #$macd_raw[count($macd_raw)-1] - $signal[count($signal)-1];
-//			# Close position for the pair when the MACD signal is negative
-//			if ($macd < 0) {
-//				return -1;
-//				# Enter the position for the pair when the MACD signal is positive
-//			} elseif ($macd > 0) {
-//				return 1;
-//			} else {
-//				return 0;
-//			}
-//		}
-//		print_r($macd);
-//		return -2;
-//	}
+	//	public function macdext($pair = 'BTC/USD', $data = null, $fastPeriod = 12, $fastMAType = 0, $slowPeriod = 26, $slowMAType = 0, $signalPeriod = 9, $signalMAType = 0)
+	//	{
+	//		$fastMAType = $this->ma_type($fastMAType);
+	//		$slowMAType = $this->ma_type($slowMAType);
+	//		$signalMAType = $this->ma_type($signalMAType);
+	//		if (empty($data)) {
+	//			$data = $this->getRecentData($pair);
+	//		}
+	//		# Create the MACD signal and pass in the three parameters: fast period, slow period, and the signal.
+	//		# we will want to tweak these periods later for now these are fine.
+	//		$macd = trader_macdext($data['close'], $fastPeriod, $fastMAType, $slowPeriod, $slowMAType, $signalPeriod,
+	//			$signalMAType);
+	//		$macd_raw = $macd[0];
+	//		$signal = $macd[1];
+	//		$hist = $macd[2];
+	//		if (!empty($macd)) {
+	//			$macd = array_pop($macd[0]) - array_pop($macd[1]); #$macd_raw[count($macd_raw)-1] - $signal[count($signal)-1];
+	//			# Close position for the pair when the MACD signal is negative
+	//			if ($macd < 0) {
+	//				return -1;
+	//				# Enter the position for the pair when the MACD signal is positive
+	//			} elseif ($macd > 0) {
+	//				return 1;
+	//			} else {
+	//				return 0;
+	//			}
+	//		}
+	//		print_r($macd);
+	//		return -2;
+	//	}
 
 	/**
 	 * Relative Strength Index indicator (RSI)
@@ -399,8 +399,8 @@ class Indicators
 	 * using return_raw you can watch for saucers and peaks and will need to
 	 * create a strategy for those if you want to use them.
 	 *
-	 * @param null   $data
-	 * @param bool   $return_raw
+	 * @param null $data
+	 * @param bool $return_raw
 	 *
 	 * @return int|mixed
 	 */
@@ -441,8 +441,8 @@ class Indicators
 	/**
 	 * Money flow index (MFI)
 	 *
-	 * @param null   $data
-	 * @param int    $period
+	 * @param null $data
+	 * @param int  $period
 	 *
 	 * @return int
 	 */
@@ -480,8 +480,8 @@ class Indicators
 	public function obv($data, $period = 14)
 	{
 		if (empty($data)) {
-//			TODO get better data flow
-//			$data = $this->getRecentData($pair, $period, true, 12); // getting day 'noon' data for last two weeks
+			//			TODO get better data flow
+			//			$data = $this->getRecentData($pair, $period, true, 12); // getting day 'noon' data for last two weeks
 		} // if
 
 		$_obv = trader_obv($data['close'], $data['volume']);
@@ -525,7 +525,7 @@ class Indicators
 	{
 		if (empty($data)) {
 			return "The data is empty! Provide some data";
-//			$data = $this->getRecentData($pair, $period, true, 12); // getting day 'noon' data for last two weeks
+			//			$data = $this->getRecentData($pair, $period, true, 12); // getting day 'noon' data for last two weeks
 		} // if
 
 		// SEE TODO: http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:parabolic_sar
@@ -869,7 +869,7 @@ class Indicators
 			return 0;
 		} // if
 
-//		TODO change trader_ema to other ema what is better as trader_ema is a sma
+		//		TODO change trader_ema to other ema what is better as trader_ema is a sma
 		$macd_current = (array_pop($macd_raw) - array_pop($signal));
 		$ema = trader_ema($data['close'], 13);
 		$ema_current = array_pop($ema);
@@ -1159,21 +1159,54 @@ class Indicators
 		 * the trader_dx response makes no sense
 		 * or it should be used with adx
 		 */
-//		$mdi = trader_dx($data['high'], $data['low'] , $data['close'], $period);
+		//		$mdi = trader_dx($data['high'], $data['low'] , $data['close'], $period);
 
 		/**
 		 * TODO this needs more research
 		 */
 		$high = array_reverse($data['high']);
-		$positiveDM = $high[0]-$high[1];
+		$positiveDM = $high[0] - $high[1];
 
 		$low = array_reverse($data['low']);
-		$negativeDM = $low[0]-$low[1];
+		$negativeDM = $low[0] - $low[1];
 
-		if ($positiveDM>$negativeDM) {
+		if ($positiveDM > $negativeDM) {
 			return 1;
 		} else {
 			return -1;
 		} // if
+	}
+
+	public function dbot_sar($data, $initial = 0.02, $delta = 0.02, $maximum = 0.2)
+	{
+		// $initial Initial Acceleration Factor
+		// $delta Delta Acceleration Factor
+		// $maximum Maximum Acceleration Factor
+
+		$high = 10;
+		$low = 9;
+		$trend = 0;
+
+		$psar = $low;
+		$ep = $high;
+
+		$ep_psar = $ep-$psar;
+
+		$ep_psarAcc = $initial*$ep_psar;
+
+		if($ep_psarAcc>0) {
+			$trend = 1;
+		} else {
+			$trend = -1;
+		} // if
+
+		if ($trend == 1 && ($high+$ep_psarAcc)>$low) {
+
+		} // if
+
+		if ($trend == -1 && ($high+$ep_psarAcc)<$high) {
+
+		} // if
+
 	}
 }
