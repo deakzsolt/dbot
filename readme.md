@@ -57,3 +57,10 @@ php artisan test:indicators
 ___
 > This project is still under development and it is not 100% functional!
 ___
+
+# Trading bot - TODO
+
+1. high and low are for 24h so it can't be used in calculations
+2. Check TimeWarp import option into the database
+3. Create own Parabolic SAR indicator
+4. Test php precision for better calculation (especially for EMA) 
