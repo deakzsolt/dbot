@@ -9,6 +9,7 @@ use App\Traits\TimeWrapper;
 use ccxt\ExchangeError;
 use ccxt\NetworkError;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class DataImporter extends Command
 {
@@ -95,11 +96,11 @@ class DataImporter extends Command
 					} // foreach
 
 				} catch (NetworkError $e) {
-					echo '[Network Error] ' . $e->getMessage() . "\n";
+					Log::warning('[Network Error] ' . $e->getMessage ());
 				} catch (ExchangeError $e) {
-					echo '[Exchange Error] ' . $e->getMessage() . "\n";
+					Log::warning('[Exchange Error] ' . $e->getMessage ());
 				} catch (\Exception $e) {
-					echo '[Error] ' . $e->getMessage() . "\n";
+					Log::error('[Error] ' . $e->getMessage ());
 				}
 				sleep(5);
 			} // while
