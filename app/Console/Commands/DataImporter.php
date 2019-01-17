@@ -61,6 +61,7 @@ class DataImporter extends Command
 				try {
 
 					foreach ($pairs as $symbol) {
+						$this->line("Importing | ".$symbol." |");
 
 						$response = $exchange->fetch_ticker($symbol);
 
@@ -96,13 +97,17 @@ class DataImporter extends Command
 					} // foreach
 
 				} catch (NetworkError $e) {
-					Log::warning('[Network Error] ' . $e->getMessage ());
+//					echo '[Network Error] ' . $e->getMessage() . "\n";
+					Log::warning('[Network Error] ' . $e->getMessage());
 				} catch (ExchangeError $e) {
-					Log::warning('[Exchange Error] ' . $e->getMessage ());
+//					echo '[Exchange Error] ' . $e->getMessage() . "\n";
+					Log::warning('[Exchange Error] ' . $e->getMessage());
 				} catch (\Exception $e) {
-					Log::error('[Error] ' . $e->getMessage ());
+//					echo '[Error] ' . $e->getMessage() . "\n";
+					Log::error('[Error] ' . $e->getMessage());
 				}
 				sleep(5);
+				$this->info('Sleep is ower lets import more data!!! ----------------------------------------->');
 			} // while
 		} // foreach
 	}
