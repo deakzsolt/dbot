@@ -24,7 +24,35 @@ class Scalper extends Command
 	 *
 	 * @var string
 	 */
-	protected $description = 'Command description';
+	protected $description = 'This is a scalper trading mostly for day trading with SAR indicator as buy and trailing for sell';
+
+	/**
+	 * Time Frame for data
+	 *
+	 * day trade - 5m/15m/30m
+	 * swing trade - 1h/4h/daily
+	 * core trade - 4h/daily/weekly
+	 * long-term investment - daily/weekly/monthly
+	 *
+	 * @var string
+	 */
+	protected $timeFrame = '30m';
+
+	/**
+	 * Sell if highest price goes down
+	 * in percentage
+	 *
+	 * @var int
+	 */
+	protected $trailing = 1;
+
+	/**
+	 * Stop loss if it goes below bought price
+	 * in percentage
+	 *
+	 * @var float
+	 */
+	protected $stopLoss = 0.5;
 
 	/**
 	 * Create a new command instance.
@@ -43,6 +71,12 @@ class Scalper extends Command
 	 */
 	public function handle()
 	{
+		// TODO this is now mostly as testing setup now will be set as cron to run this and make a trades
+		// TODO set this up with tracking as buy indicator
+		// TODO add trailing for sell
+		// TODO add in stop loss for tighter sell
+		// TODO when done move to Strategies
+
 		$this->line(date('Y-m-d H:i:s') . " - <bg=yellow>Simple indicator test for Parabolic SAR ...</>");
 
 		$exchangeId = Exchanges::where('slug', 'poloniex')->first()->id;
@@ -52,24 +86,28 @@ class Scalper extends Command
 			$indicators = array();
 			foreach (Ticker::getPairs() as $pairs) {
 
-				$data = $this->getLatestData($pairs['symbol'], 25, '30m');
+				$data = $this->getLatestData($pairs['symbol'], 25, $this->timeFrame);
 
-				$_sar = trader_sar($data[$exchangeId]['high'], $data[$exchangeId]['low'], 0.02, 0.2);
+				$_sar = trader_sar($data[$exchangeId]['high'], $data[$exchangeId]['low'], 0.02, 0.02);
 
 				$current_sar = array_pop($_sar); #[count($_sar) - 1];
 				$prior_sar = array_pop($_sar); #[count($_sar) - 2];
 				$earlier_sar = array_pop($_sar); #[count($_sar) - 3];
-				$last_high = array_pop($data[$exchangeId]['high']); #[count($data['high'])-1];
-				$last_low = array_pop($data[$exchangeId]['low']); #[count($data['low'])-1];
+				$currentHigh = array_pop($data[$exchangeId]['high']); #[count($data['high'])-1];
+				$currentLow = array_pop($data[$exchangeId]['low']); #[count($data['low'])-1];
+				$priorHigh = array_pop($data[$exchangeId]['high']);
+				$priorLow = array_pop($data[$exchangeId]['low']);
+				$earlierHigh = array_pop($data[$exchangeId]['high']);
+				$earlierLow = array_pop($data[$exchangeId]['low']);
 
 				/**
 				 *  if the last three SAR points are above the candle (high) then it is a sell signal
-				 *  if the last three SAE points are below the candle (low) then is a buy signal
+				 *  if the last three SAR points are below the candle (low) then is a buy signal
 				 */
-				if (($current_sar > $last_high) && ($prior_sar > $last_high) && ($earlier_sar > $last_high)) {
+				if (($current_sar > $currentHigh) && ($prior_sar > $currentHigh) && ($earlier_sar > $currentHigh)) {
 					$state = " -1 | <bg=red>" . $pairs['symbol'] . "</>";
 					//					return -1; //sell
-				} elseif (($current_sar < $last_low) && ($prior_sar < $last_low) && ($earlier_sar < $last_low)) {
+				} elseif (($current_sar < $currentLow) && ($prior_sar < $currentLow) && ($earlier_sar < $currentLow)) {
 					$state = "  1 | <bg=green>" . $pairs['symbol'] . "</>";
 					//					return 1; // buy
 				} else {
@@ -82,8 +120,26 @@ class Scalper extends Command
 				$candle = $prevPrice < $lastPrice ? 'green' : 'red';
 				$headers .= "| " . $pairs['symbol'] . " <bg=$candle>" . $lastPrice . "</> | ";
 
-				$indicators[] = $state . " => <fg=yellow>$current_sar, $prior_sar, $earlier_sar, $last_high, $last_low</>";
+				if ($currentHigh < $current_sar) {
+					$currentSarPoint = '<fg=red>above</>';
+				} else {
+					$currentSarPoint = '<fg=green>below</>';
+				} // if
 
+				if ($priorHigh < $prior_sar) {
+					$priorSarPoint = '<fg=red>above</>';
+				} else {
+					$priorSarPoint = '<fg=green>below</>';
+				} // if
+
+				if ($earlierHigh < $earlier_sar) {
+					$earlierSarPoint = '<fg=red>above</>';
+				} else {
+					$earlierSarPoint = '<fg=green>below</>';
+				} // if
+
+				$indicators[] = $state . " => <fg=yellow>$current_sar, $prior_sar, $earlier_sar</> Price: | <fg=cyan>$currentHigh, $currentLow | $priorHigh, $priorLow | $earlierHigh, $earlierLow |</>
+$currentSarPoint - $priorSarPoint - $earlierSarPoint";
 			} // foreach
 
 			$this->line(date('Y-m-d H:i:s') . " - " . $headers);

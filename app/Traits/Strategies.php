@@ -13,7 +13,8 @@ trait Strategies
     public $strategyNames = array(
         'sma_stoch_rsi',
         'sma_stoch',
-        'ema_stoch_rsi'
+        'ema_stoch_rsi',
+		'strategy_trailing_sar'
     );
 
 
@@ -201,4 +202,9 @@ trait Strategies
         $EMA = array_reverse($EMA);
         return $EMA;
     }
+
+    public function strategy_trailing_sar()
+	{
+		// TODO move here from Scalper when testing done
+	}
 }
