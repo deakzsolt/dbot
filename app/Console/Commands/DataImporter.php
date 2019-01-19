@@ -61,10 +61,8 @@ class DataImporter extends Command
 				try {
 
 					foreach ($pairs as $symbol) {
-						$this->line("Importing | ".$symbol." |");
 
 						$response = $exchange->fetch_ticker($symbol);
-
 						$exchangeId = Exchanges::where('slug', 'poloniex')->first()->id;
 
 						$datetime = date('Y-m-d H:i:s', strtotime($response['datetime']));
@@ -97,17 +95,13 @@ class DataImporter extends Command
 					} // foreach
 
 				} catch (NetworkError $e) {
-//					echo '[Network Error] ' . $e->getMessage() . "\n";
 					Log::warning('[Network Error] ' . $e->getMessage());
 				} catch (ExchangeError $e) {
-//					echo '[Exchange Error] ' . $e->getMessage() . "\n";
 					Log::warning('[Exchange Error] ' . $e->getMessage());
 				} catch (\Exception $e) {
-//					echo '[Error] ' . $e->getMessage() . "\n";
 					Log::error('[Error] ' . $e->getMessage());
 				}
 				sleep(5);
-				$this->info('Sleep is ower lets import more data!!! ----------------------------------------->');
 			} // while
 		} // foreach
 	}

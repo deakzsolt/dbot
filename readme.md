@@ -60,7 +60,7 @@ ___
 
 # Trading bot - TODO
 
-1. high and low are for 24h so it can't be used in calculations
-2. Check TimeWarp import option into the database
+1. high and low are for 24h so it can't be used in calculations - done
+2. Check TimeWarp import option into the database - done
 3. Create own Parabolic SAR indicator
-4. Test php precision for better calculation (especially for EMA) 
+4. Test php precision for better calculation (especially for EMA) - done tested on SAR (add in php.ini ```trader.real_precision = 9```) 
