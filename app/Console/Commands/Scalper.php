@@ -8,7 +8,6 @@ use App\Trades;
 use Illuminate\Console\Command;
 use App\Traits\DataProcessing;
 use App\Traits\Strategies;
-use Illuminate\Support\Carbon;
 
 class Scalper extends Command
 {
@@ -102,7 +101,6 @@ class Scalper extends Command
 				$earlierHigh = array_pop($data[$exchangeId]['high']);
 				$earlierLow = array_pop($data[$exchangeId]['low']);
 
-				dd($data);
 				/**
 				 *  if the last three SAR points are above the candle (high) then it is a sell signal
 				 *  if the last three SAR points are below the candle (low) then is a buy signal
@@ -147,7 +145,8 @@ class Scalper extends Command
 				} // if
 
 				$indicators[] = $state . " => <fg=yellow>$current_sar, $prior_sar, $earlier_sar</> Price: | <fg=cyan>$currentHigh, $currentLow | $priorHigh, $priorLow | $earlierHigh, $earlierLow |</>
-$currentSarPoint - $priorSarPoint - $earlierSarPoint";
+$currentSarPoint - $priorSarPoint - $earlierSarPoint
+$order";
 			} // foreach
 
 			$this->line(date('Y-m-d H:i:s') . " - " . $headers);
@@ -156,7 +155,6 @@ $currentSarPoint - $priorSarPoint - $earlierSarPoint";
 				$this->line($indicator);
 				usleep(100000);
 			}
-			$this->line($order);
 
 			$this->info(date('Y-m-d H:i:s') . " - Count the sheep's now ...\n");
 			sleep(5);
@@ -164,6 +162,19 @@ $currentSarPoint - $priorSarPoint - $earlierSarPoint";
 		} // while
 	}
 
+	/**
+	 * Execute trades on signals with tracking in db
+	 *
+	 * TODO extend trades for amount
+	 *
+	 * @param $strategy
+	 * @param $symbol
+	 * @param $price
+	 * @param $exchange_id
+	 * @param $order
+	 *
+	 * @return string
+	 */
 	private function trade($strategy, $symbol, $price, $exchange_id, $order)
 	{
 		$status = 'do nothing';
@@ -197,7 +208,7 @@ $currentSarPoint - $priorSarPoint - $earlierSarPoint";
 			if ($lastTrade->count() == 0) {
 				$trade = new Trades();
 
-				$trade->order_id = Carbon::now()->toDateTimeString();
+				$trade->order_id = now()->timestamp;
 				$trade->exchange_id = $exchange_id;
 				$trade->symbol = $symbol;
 				$trade->strategy = $strategy;
