@@ -4,9 +4,11 @@ namespace App\Console\Commands;
 
 use App\Models\Exchanges;
 use App\Ticker;
+use App\Trades;
 use Illuminate\Console\Command;
 use App\Traits\DataProcessing;
 use App\Traits\Strategies;
+use Illuminate\Support\Carbon;
 
 class Scalper extends Command
 {
@@ -100,19 +102,25 @@ class Scalper extends Command
 				$earlierHigh = array_pop($data[$exchangeId]['high']);
 				$earlierLow = array_pop($data[$exchangeId]['low']);
 
+				dd($data);
 				/**
 				 *  if the last three SAR points are above the candle (high) then it is a sell signal
 				 *  if the last three SAR points are below the candle (low) then is a buy signal
 				 */
 				if (($current_sar > $currentHigh) && ($prior_sar > $currentHigh) && ($earlier_sar > $currentHigh)) {
 					$state = " -1 | <bg=red>" . $pairs['symbol'] . "</>";
+
+					$order = $this->trade('strategy_trailing_sar', $pairs['symbol'], array_pop($data[$exchangeId]['ask']), $exchangeId, 'sell');
 					//					return -1; //sell
 				} elseif (($current_sar < $currentLow) && ($prior_sar < $currentLow) && ($earlier_sar < $currentLow)) {
 					$state = "  1 | <bg=green>" . $pairs['symbol'] . "</>";
+
+					$order = $this->trade('strategy_trailing_sar', $pairs['symbol'], array_pop($data[$exchangeId]['bid']), $exchangeId, 'buy');
 					//					return 1; // buy
 				} else {
 					$state = "  0 | " . $pairs['symbol'];
 					//					return 0; // hold
+					$order = 'no signal sent';
 				} // if
 
 				$lastPrice = array_pop($data[$exchangeId]['close']);
@@ -148,10 +156,62 @@ $currentSarPoint - $priorSarPoint - $earlierSarPoint";
 				$this->line($indicator);
 				usleep(100000);
 			}
+			$this->line($order);
 
 			$this->info(date('Y-m-d H:i:s') . " - Count the sheep's now ...\n");
 			sleep(5);
 
 		} // while
+	}
+
+	private function trade($strategy, $symbol, $price, $exchange_id, $order)
+	{
+		$status = 'do nothing';
+		$lastTrade = Trades::where('strategy', $strategy)->where('symbol', $symbol);
+
+		if ($lastTrade->count() > 0 && $order == 'sell') {
+			$position = $lastTrade->first();
+
+			if ($position->order == 'buy' && $position->status == 'closed') {
+				$trade = new Trades();
+
+				$trade->order_id = $lastTrade->order_id;
+				$trade->exchange_id = $exchange_id;
+				$trade->symbol = $symbol;
+				$trade->strategy = $strategy;
+				$trade->order = 'sell';
+				$trade->status = 'closed';
+				$trade->price = $price;
+
+				$trade->profit = $price-$lastTrade->price;
+				$trade->percentage = '';
+
+				$trade->save();
+
+				$status = 'sold';
+				// TODO add here exchange sell
+			} // if
+		} // if
+
+		if ($order == 'buy') {
+			if ($lastTrade->count() == 0) {
+				$trade = new Trades();
+
+				$trade->order_id = Carbon::now()->toDateTimeString();
+				$trade->exchange_id = $exchange_id;
+				$trade->symbol = $symbol;
+				$trade->strategy = $strategy;
+				$trade->order = 'buy';
+				$trade->status = 'closed';
+				$trade->price = $price;
+
+				$trade->save();
+
+				$status = 'bought';
+				// TODO add here exchange nuy
+			} // if
+		} // if
+
+		return $status;
 	}
 }

@@ -1177,12 +1177,13 @@ class Indicators
 		} // if
 	}
 
-	public function dbot_sar($data, $initial = 0.02, $delta = 0.02, $maximum = 0.2)
+	public function dbot_sar_calc($data, $initial = 0.02, $delta = 0.02, $maximum = 0.2)
 	{
 		// $initial Initial Acceleration Factor
 		// $delta Delta Acceleration Factor
 		// $maximum Maximum Acceleration Factor
 
+		// TODO if the trader_sar not giving good values continue to build this
 		$high = 10;
 		$low = 9;
 		$trend = 0;
