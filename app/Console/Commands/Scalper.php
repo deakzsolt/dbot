@@ -108,17 +108,19 @@ class Scalper extends Command
 				if (($current_sar > $currentHigh) && ($prior_sar > $currentHigh) && ($earlier_sar > $currentHigh)) {
 					$state = " -1 | <bg=red>" . $pairs['symbol'] . "</>";
 
-					$order = $this->trade('strategy_trailing_sar', $pairs['symbol'], array_pop($data[$exchangeId]['ask']), $exchangeId, 'sell');
+					$order = $this->trade('strategy_trailing_sar', $pairs['symbol'],
+						array_pop($data[$exchangeId]['ask']), $exchangeId, 'sell');
 					//					return -1; //sell
 				} elseif (($current_sar < $currentLow) && ($prior_sar < $currentLow) && ($earlier_sar < $currentLow)) {
 					$state = "  1 | <bg=green>" . $pairs['symbol'] . "</>";
 
-					$order = $this->trade('strategy_trailing_sar', $pairs['symbol'], array_pop($data[$exchangeId]['bid']), $exchangeId, 'buy');
+					$order = $this->trade('strategy_trailing_sar', $pairs['symbol'],
+						array_pop($data[$exchangeId]['bid']), $exchangeId, 'buy');
 					//					return 1; // buy
 				} else {
 					$state = "  0 | " . $pairs['symbol'];
 					//					return 0; // hold
-					$order = 'no signal sent';
+					$order = '<fg=magenta>just wait for signal ...</>';
 				} // if
 
 				$lastPrice = array_pop($data[$exchangeId]['close']);
@@ -132,13 +134,13 @@ class Scalper extends Command
 					$currentSarPoint = '<fg=green>below</>';
 				} // if
 
-				if ($priorHigh < $prior_sar) {
+				if ($currentHigh < $prior_sar) {
 					$priorSarPoint = '<fg=red>above</>';
 				} else {
 					$priorSarPoint = '<fg=green>below</>';
 				} // if
 
-				if ($earlierHigh < $earlier_sar) {
+				if ($currentHigh < $earlier_sar) {
 					$earlierSarPoint = '<fg=red>above</>';
 				} else {
 					$earlierSarPoint = '<fg=green>below</>';
@@ -165,8 +167,6 @@ $order";
 	/**
 	 * Execute trades on signals with tracking in db
 	 *
-	 * TODO extend trades for amount
-	 *
 	 * @param $strategy
 	 * @param $symbol
 	 * @param $price
@@ -177,49 +177,76 @@ $order";
 	 */
 	private function trade($strategy, $symbol, $price, $exchange_id, $order)
 	{
-		$status = 'do nothing';
-		$lastTrade = Trades::where('strategy', $strategy)->where('symbol', $symbol);
+		$status = '<bg=green>All is done waiting for new orders</>';
+		$lastTrade = Trades::where('strategy', $strategy)->where('symbol', $symbol)->orderBy('updated_at', 'desc');
 
 		if ($lastTrade->count() > 0 && $order == 'sell') {
 			$position = $lastTrade->first();
 
-			if ($position->order == 'buy' && $position->status == 'closed') {
+			if ($position->order == 'buy' && $position->status == 'open' && $position->order_executed == 1) {
+
+				$position->status = 'closed';
+				$position->save();
+
 				$trade = new Trades();
 
-				$trade->order_id = $lastTrade->order_id;
+				$trade->order_id = $position->order_id;
 				$trade->exchange_id = $exchange_id;
 				$trade->symbol = $symbol;
+				$trade->timestamp = now()->timestamp;
 				$trade->strategy = $strategy;
 				$trade->order = 'sell';
 				$trade->status = 'closed';
 				$trade->price = $price;
+				$trade->trade = $position->amount;
 
-				$trade->profit = $price-$lastTrade->price;
-				$trade->percentage = '';
+				$newAmount = $position->amount * $price;
+				$trade->amount = $newAmount;
+				$trade->profit = $price - $position->price;
+
+				$difference = $newAmount - $position->trade;
+				$percentage = $difference / $position->trade * 100;
+				$trade->percentage = $percentage;
 
 				$trade->save();
 
-				$status = 'sold';
+				$status = '<bg=green>Sold!</>';
 				// TODO add here exchange sell
 			} // if
 		} // if
 
 		if ($order == 'buy') {
 			if ($lastTrade->count() == 0) {
+
+				$tradingAmount = 100;
+
+				$closedTrade = Trades::where('strategy', $strategy)
+					->where('symbol', $symbol)
+					->where('status', 'closed')
+					->where('order', 'sell')
+					->orderBy('updated_at', 'desc');
+				if ($closedTrade->count() > 0) {
+					$tradingAmount = $closedTrade->first()->amount;
+				} // if
+
 				$trade = new Trades();
 
-				$trade->order_id = now()->timestamp;
+				$trade->order_id = hash('sha256', now()->timestamp . $symbol);
 				$trade->exchange_id = $exchange_id;
 				$trade->symbol = $symbol;
+				$trade->timestamp = now()->timestamp;
 				$trade->strategy = $strategy;
 				$trade->order = 'buy';
-				$trade->status = 'closed';
+				$trade->status = 'open';
+				$trade->order_executed = 1;
 				$trade->price = $price;
+				$trade->trade = $tradingAmount;
+				$trade->amount = $tradingAmount / $price;
 
 				$trade->save();
 
-				$status = 'bought';
-				// TODO add here exchange nuy
+				$status = '<bg=green>Bought!</>';
+				// TODO add here exchange buy
 			} // if
 		} // if
 

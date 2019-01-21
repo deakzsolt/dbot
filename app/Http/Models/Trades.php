@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
  * Class Trades
  * @package App\Models
  *
- * @property int $order_id
+ * @property string $order_id
  * @property int $exchange_id
  * @property string $symbol
  * @property int $timestamp
@@ -17,6 +17,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $status
  * @property boolean $order_executed
  * @property int $price
+ * @property int $trade
+ * @property int $amount
  * @property int $profit
  * @property int $percentage
  */
@@ -37,6 +39,8 @@ class Trades extends Model
         'status',
         'order_executed',
         'price',
+        'trade',
+        'amount',
         'profit',
         'percentage'
     );
@@ -59,6 +63,8 @@ class Trades extends Model
             'status' => 'Open or Closed',
             'order_executed' => 'Is order filled',
             'price' => 'Order price',
+            'trade' => 'Amount of invested money',
+            'amount' => 'Bought from invested money',
             'profit' => 'Buy/sell closed show profit',
             'percentage' => 'Show profit in percentage'
 
