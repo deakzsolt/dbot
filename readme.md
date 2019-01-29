@@ -43,7 +43,7 @@ The import:history command expect's 2 parameters, pair and exchange.
 The exchange parameter is set as default poloniex while the pair can be multiple trading pairs.
 For example here is one command:
 ```
-php artisan import:history USDT_BTC,BTC_ETC,USDT_ETH,USDT_ETC,USDT_ZEC,BTC_ZEC,USDT_ZRX
+php artisan import:history USDT_BTC,USDT_ETH,USDT_STR,USDT_REP,USDT_LTC,USDT_EOS,USDT_ETC,USDT_ZEC,USDT_ZRX
 ```
 Check on the exchange from where the pairs are imported what are the predefined symbols for the API.
 
@@ -63,4 +63,5 @@ ___
 1. high and low are for 24h so it can't be used in calculations - done
 2. Check TimeWarp import option into the database - done
 3. Create own Parabolic SAR indicator
-4. Test php precision for better calculation (especially for EMA) - done tested on SAR (add in php.ini ```trader.real_precision = 9```) 
+4. Test php precision for better calculation (especially for EMA) - done tested on SAR (add in php.ini ```trader.real_precision = 9```)
+5. Add other calculations for currency and crypto 

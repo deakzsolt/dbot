@@ -50,4 +50,9 @@ class Trailing extends Model
 
 		return $names[$attribute];
 	}
+
+	public function getTrailing()
+	{
+
+	}
 }

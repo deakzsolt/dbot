@@ -81,7 +81,6 @@ class Scalper extends Command
 	public function handle()
 	{
 		// TODO this is now mostly as testing setup now will be set as cron to run this and make a trades
-		// TODO set this up with tracking as buy indicator
 		// TODO add trailing for sell
 		// TODO add in stop loss for tighter sell
 		// TODO when done move to Strategies
@@ -96,7 +95,6 @@ class Scalper extends Command
 			foreach (Ticker::getPairs() as $pairs) {
 
 				$data = $this->getLatestData($pairs['symbol'], 25, $this->timeFrame);
-
 				$_sar = trader_sar($data[$exchangeId]['high'], $data[$exchangeId]['low'], 0.02, 0.02);
 
 				$current_sar = array_pop($_sar); #[count($_sar) - 1];

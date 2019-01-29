@@ -21,6 +21,7 @@ class TradeServices
 
 	/**
 	 * This is set now for testing
+	 * TODO separate USD from other currency
 	 *
 	 * @var int
 	 */
@@ -45,9 +46,19 @@ class TradeServices
 	{
 		$lastTrade = $this->trades->getLatestOrder($strategy, $symbol, $exchange);
 
+		$order = false;
 		if ($lastTrade->count() == 0) {
+			$order = true;
+		} else {
+			$position = $lastTrade->first();
+			if ($position->order == 'sell' && $position->status == 'closed' && $position->order_executed == 1) {
+				$order = true;
+			} // if
+		} // if
 
-			$closedTrade = $this->trades->getClosedOrder($strategy, $symbol);
+		if ($order) {
+
+			$closedTrade = $this->trades->getClosedOrder($strategy, $symbol, $exchange);
 
 			if ($closedTrade->count() > 0) {
 				$this->tradingAmount = $closedTrade->first()->amount;

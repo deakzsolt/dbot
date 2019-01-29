@@ -87,7 +87,7 @@ class Trades extends Model
 		return Trades::where('strategy', $strategy)
 			->where('symbol', $symbol)
 			->where('exchange_id', $exchange)
-			->orderBy('updated_at', 'desc');
+			->orderBy('created_at', 'desc');
 	}
 
 	/**
@@ -98,12 +98,13 @@ class Trades extends Model
 	 *
 	 * @return mixed
 	 */
-	public function getClosedOrder(string $strategy, string $symbol)
+	public function getClosedOrder(string $strategy, string $symbol, int $exchange)
 	{
 		return Trades::where('strategy', $strategy)
 			->where('symbol', $symbol)
+			->where('exchange_id', $exchange)
 			->where('status', 'closed')
 			->where('order', 'sell')
-			->orderBy('updated_at', 'desc');
+			->orderBy('created_at', 'desc');
 	}
 }
