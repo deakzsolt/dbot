@@ -72,4 +72,38 @@ class Trades extends Model
 
         return $names[$attribute];
     }
+
+	/**
+	 * Returns latest trade
+	 *
+	 * @param string $strategy
+	 * @param string $symbol
+	 * @param int    $exchange
+	 *
+	 * @return mixed
+	 */
+	public function getLatestOrder(string $strategy, string $symbol, int $exchange)
+	{
+		return Trades::where('strategy', $strategy)
+			->where('symbol', $symbol)
+			->where('exchange_id', $exchange)
+			->orderBy('updated_at', 'desc');
+	}
+
+	/**
+	 * Returns latest closed trade
+	 *
+	 * @param string $strategy
+	 * @param string $symbol
+	 *
+	 * @return mixed
+	 */
+	public function getClosedOrder(string $strategy, string $symbol)
+	{
+		return Trades::where('strategy', $strategy)
+			->where('symbol', $symbol)
+			->where('status', 'closed')
+			->where('order', 'sell')
+			->orderBy('updated_at', 'desc');
+	}
 }
