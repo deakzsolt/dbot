@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Exchanges;
 use ccxt\Exchange;
 use Illuminate\Console\Command;
-use App\Ticker;
+use App\Models\Ticker;
 
 class HistoryDataImport extends Command
 {

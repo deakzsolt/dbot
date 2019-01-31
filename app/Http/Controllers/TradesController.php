@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Trades;
+use App\Models\Trades;
 use Illuminate\Http\Request;
 
 class TradesController extends Controller

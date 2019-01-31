@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Exchanges;
 use App\Models\Options;
-use App\Ticker;
+use App\Models\Ticker;
 use App\Traits\TimeWrapper;
 use ccxt\ExchangeError;
 use ccxt\NetworkError;

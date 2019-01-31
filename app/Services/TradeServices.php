@@ -9,7 +9,7 @@
 namespace App\Services;
 
 use App\Models\Exchanges;
-use App\Trades;
+use App\Models\Trades;
 use Illuminate\Support\Facades\Log;
 
 class TradeServices
@@ -27,6 +27,11 @@ class TradeServices
 	 */
 	protected $tradingAmount = 100;
 
+	/**
+	 * TradeServices constructor.
+	 *
+	 * @param Trades $trades
+	 */
 	public function __construct(Trades $trades)
 	{
 		$this->trades = $trades;

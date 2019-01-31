@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Exchanges;
 use App\Services\TradeServices;
-use App\Ticker;
+use App\Models\Ticker;
 use Illuminate\Console\Command;
 use App\Traits\DataProcessing;
 use App\Traits\Strategies;
@@ -166,13 +166,5 @@ $currentSarPoint - $priorSarPoint - $earlierSarPoint";
 			sleep(5);
 
 		} // while
-	}
-
-	private function trailing($price) {
-		$trailing = $this->trailing/100;
-
-		$buy = $price-($price*$trailing);
-
-		echo $buy;
 	}
 }

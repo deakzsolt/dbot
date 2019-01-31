@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Models\Exchanges;
-use App\Ticker;
-use App\Trades;
+use App\Models\Ticker;
+use App\Models\Trades;
 use Illuminate\Console\Command;
 use App\Traits\DataProcessing;
 use App\Traits\Strategies;
