@@ -93,7 +93,6 @@ class Scalper extends Command
 			$headers = '';
 			$indicators = array();
 			foreach (Ticker::getPairs() as $pairs) {
-
 				$data = $this->getLatestData($pairs['symbol'], 25, $this->timeFrame);
 				$_sar = trader_sar($data[$exchangeId]['high'], $data[$exchangeId]['low'], 0.02, 0.02);
 

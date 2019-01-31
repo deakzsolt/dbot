@@ -66,18 +66,18 @@ class TradeServices
 
 			$trade = new Trades();
 			$trade->fill(array(
-					'order_id'       => hash('sha256', now()->timestamp . $symbol),
-					'exchange_id'    => $exchange,
-					'symbol'         => $symbol,
-					'timestamp'      => now()->timestamp,
-					'strategy'       => $strategy,
-					'order'          => 'buy',
-					'status'         => 'open',
-					'order_executed' => 1,
-					'price'          => $price,
-					'trade'          => $this->tradingAmount,
-					'amount'         => $this->tradingAmount / $price,
-				))->save();
+				'order_id'       => hash('sha256', now()->timestamp . $symbol),
+				'exchange_id'    => $exchange,
+				'symbol'         => $symbol,
+				'timestamp'      => now()->timestamp,
+				'strategy'       => $strategy,
+				'order'          => 'buy',
+				'status'         => 'open',
+				'order_executed' => 1,
+				'price'          => $price,
+				'trade'          => $this->tradingAmount,
+				'amount'         => $this->tradingAmount / $price,
+			))->save();
 
 			$this->handleOrder($exchange);
 
@@ -99,19 +99,21 @@ class TradeServices
 	public function orderSell(string $strategy, string $symbol, int $exchange, $price)
 	{
 		$lastTrade = $this->trades->getLatestOrder($strategy, $symbol, $exchange);
-		$position = $lastTrade->first();
 
-		if ($position->order == 'buy' && $position->status == 'open' && $position->order_executed == 1) {
+		if ($lastTrade->count() > 0) {
+			$position = $lastTrade->first();
 
-			$position->status = 'closed';
-			$position->save();
+			if ($position->order == 'buy' && $position->status == 'open' && $position->order_executed == 1) {
 
-			$newAmount = $position->amount * $price;
-			$difference = $newAmount - $position->trade;
-			$percentage = $difference / $position->trade * 100;
+				$position->status = 'closed';
+				$position->save();
 
-			$trade = new Trades();
-			$trade->fill(array(
+				$newAmount = $position->amount * $price;
+				$difference = $newAmount - $position->trade;
+				$percentage = $difference / $position->trade * 100;
+
+				$trade = new Trades();
+				$trade->fill(array(
 					'order_id'       => $position->order_id,
 					'exchange_id'    => $exchange,
 					'symbol'         => $symbol,
@@ -127,9 +129,10 @@ class TradeServices
 					'percentage'     => $percentage,
 				))->save();
 
-			$this->handleOrder($exchange);
+				$this->handleOrder($exchange);
 
-			return true;
+				return true;
+			} // if
 		} // if
 		return false;
 	}
@@ -142,15 +145,15 @@ class TradeServices
 	private function handleOrder($exchange)
 	{
 		$trade = null;
-//		try {
-//			$exchangeName = Exchanges::find($exchange)->first()->slug;
-//
-//			$className = '\ccxt\\' . $exchangeName;
-//			$exchange = new $className;
-//			$exchange->parse_trade($trade);
-//
-//		} catch (\Exception $e) {
-//			Log::error('[Error] ' . $e->getMessage());
-//		}
+		//		try {
+		//			$exchangeName = Exchanges::find($exchange)->first()->slug;
+		//
+		//			$className = '\ccxt\\' . $exchangeName;
+		//			$exchange = new $className;
+		//			$exchange->parse_trade($trade);
+		//
+		//		} catch (\Exception $e) {
+		//			Log::error('[Error] ' . $e->getMessage());
+		//		}
 	}
 }

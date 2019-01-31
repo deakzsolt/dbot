@@ -16,7 +16,6 @@ class insertOptions extends Seeder
                 'poloniex' => array(
                     'BTC/USDT',
                     'ETH/USDT',
-					'STR/USDT',
 					'REP/USDT',
 					'LTC/USDT',
 					'EOS/USDT',
