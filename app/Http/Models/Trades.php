@@ -91,6 +91,26 @@ class Trades extends Model
 	}
 
 	/**
+	 * Returns latest open Buy trade
+	 *
+	 * @param string $strategy
+	 * @param string $symbol
+	 * @param int    $exchange
+	 *
+	 * @return mixed
+	 */
+	public function getLatestOpenOrder(string $strategy, string $symbol, int $exchange)
+	{
+		return Trades::where('strategy', $strategy)
+			->where('symbol', $symbol)
+			->where('exchange_id', $exchange)
+			->where('order','buy')
+			->where('status','open')
+			->where('order_executed',1)
+			->orderBy('created_at', 'desc');
+	}
+
+	/**
 	 * Returns latest closed trade
 	 *
 	 * @param string $strategy

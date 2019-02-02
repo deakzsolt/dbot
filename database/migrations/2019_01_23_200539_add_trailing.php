@@ -13,7 +13,7 @@ class AddTrailing extends Migration
      */
     public function up()
     {
-		Schema::create('trailing', function (Blueprint $table) {
+		Schema::create('trailings', function (Blueprint $table) {
 			$table->increments('id');
 			$table->integer('trade_id')->references('id')->on('trades')->onDelete('cascade');
 			$table->string('state');
@@ -32,6 +32,6 @@ class AddTrailing extends Migration
      */
     public function down()
     {
-		Schema::dropIfExists('trailing');
+		Schema::dropIfExists('trailings');
     }
 }

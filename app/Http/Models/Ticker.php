@@ -99,4 +99,19 @@ class Ticker extends Model
     {
         return Ticker::select('symbol')->distinct()->get();
     }
+
+	/**
+	 * Returns last trade data by Symbol
+	 *
+	 * @param string $pair
+	 * @param int    $exchange
+	 *
+	 * @return mixed
+	 */
+    public function getLastDataByPair(string $pair,int $exchange)
+	{
+		return Ticker::where('symbol',$pair)
+			->where('exchange_id',$exchange)
+			->orderBy('created_at', 'desc');
+	}
 }

@@ -30,11 +30,11 @@ class TradeServices
 	/**
 	 * TradeServices constructor.
 	 *
-	 * @param Trades $trades
+	 * @param Trades $Trades
 	 */
-	public function __construct(Trades $trades)
+	public function __construct(Trades $Trades)
 	{
-		$this->trades = $trades;
+		$this->trades = $Trades;
 	}
 
 	/**
