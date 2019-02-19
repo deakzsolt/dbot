@@ -106,9 +106,16 @@ class Scalper extends Command
 					'exchange' => $exchangeId,
 				);
 
-				$data = $data = $this->getLatestData($pairs['symbol'], 30, $this->timeFrame);
+
+				$data = $this->getLatestData($pairs['symbol'], 30, $this->timeFrame);
+				$price = array_slice($data[$exchangeId]['close'], -2, 2, false);
+				$lastPrice = $price[1];
+				$prevPrice = $price[0];
+				$candle = $prevPrice < $lastPrice ? 'green' : 'red';
+				$headers .= "| " . $pairs['symbol'] . " <bg=$candle>" . $lastPrice . "</> | ";
+
 				$response = $this->sar_stoch($data[$exchangeId]);
-				$headers .= "| " . $pairs['symbol']." | ";
+//				$headers .= "| " . $pairs['symbol']." | ";
 				$indicators[] = $response;
 //
 //				if ($this->trailingServices->checkTrailing($params)) {
