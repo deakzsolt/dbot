@@ -33,7 +33,7 @@ class TrailingServices
 	/**
 	 * @var TradeServices
 	 */
-	protected $tradesServices;
+	protected $tradeServices;
 
 	/**
 	 * TrailingServices constructor.
@@ -48,7 +48,7 @@ class TrailingServices
 		$this->trades = $Trades;
 		$this->trailing = $Trailing;
 		$this->ticker = $Ticker;
-		$this->tradesServices = $TradeServices;
+		$this->tradeServices = $TradeServices;
 	}
 
 	/**
@@ -118,7 +118,7 @@ class TrailingServices
 
 		if ($price->bid > $trailing->fix_sell) {
 			$percentage = $trailing->trailing / 100;
-			$sell = $price->bid - ($price->bid * $percentage);
+			$sell = $price->ask - ($price->ask * $percentage);
 
 			$trailing->update(
 				array(
@@ -128,6 +128,7 @@ class TrailingServices
 		} // if
 
 		if ($price->bid <= $trailing->fix_sell) {
+//			TODO close trailing if done!!!
 			$this->tradeServices->orderSell($params['strategy'], $params['symbol'],
 				$params['exchange'],$price->bid);
 		} // if
