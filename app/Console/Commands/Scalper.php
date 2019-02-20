@@ -111,7 +111,8 @@ class Scalper extends Command
 				$prevPrice = $price[0];
 				$candle = $prevPrice < $lastPrice ? 'green' : 'red';
 				$headers .= "| " . $pairs['symbol'] . " <bg=$candle>" . $lastPrice . "</> | ";
-				$bid = $price = array_slice($data[$exchangeId]['bid'], -1, 1, false)[0];
+				$bid = array_slice($data[$exchangeId]['bid'], -1, 1, false)[0];
+				$ask = array_slice($data[$exchangeId]['ask'], -1, 1, false)[0];
 
 				if ($this->trailingServices->checkTrailing($params)) {
 					$indicators[] = $pairs['symbol'] . '<fg=yellow> -> Trailing in progress ...</>';
@@ -122,7 +123,7 @@ class Scalper extends Command
 						case 1:
 							$state = "<bg=green>$response</> | Buy signal!";
 							if ($this->tradeServices->orderBuy($params['strategy'], $pairs['symbol'], $exchangeId,
-								$bid)) {
+								$ask)) {
 								$this->trailingServices->initialPrice($bid, $this->trailing, $params);
 							} // if
 							break;

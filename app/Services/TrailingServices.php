@@ -128,9 +128,14 @@ class TrailingServices
 		} // if
 
 		if ($price->bid <= $trailing->fix_sell) {
-//			TODO close trailing if done!!!
 			$this->tradeServices->orderSell($params['strategy'], $params['symbol'],
 				$params['exchange'],$price->bid);
+
+			$trailing->update(
+				array(
+					'state' => 'closed'
+				)
+			);
 		} // if
 
 		return true;
