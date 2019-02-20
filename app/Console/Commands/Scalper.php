@@ -116,14 +116,14 @@ class Scalper extends Command
 
 					switch ($response) {
 						case 1:
-							$state = "<bg=green>$response</> | Buy signal!";
+							$state = "<bg=green>$response | Buy signal!</>";
 							if ($this->tradeServices->orderBuy($params['strategy'], $pairs['symbol'], $exchangeId,
 								$data[$exchangeId]['lastAsk'])) {
 								$this->trailingServices->initialPrice($data[$exchangeId]['lastBid'], $this->trailing, $params);
 							} // if
 							break;
 						case -1:
-							$state = "<bg=red>$response</> | Sell signal by sar,stoch and stochf ... Do nothing.";
+							$state = "<bg=red>$response | Sell signal by sar,stoch and stochf ... Do nothing.</>";
 							break;
 						case 0:
 							$state = "$response | Nothing to do.";
