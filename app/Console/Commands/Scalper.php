@@ -39,7 +39,7 @@ class Scalper extends Command
 	 *
 	 * @var string
 	 */
-	protected $timeFrame = '30m';
+	protected $timeFrame = '1h';
 
 	/**
 	 * Sell if highest price goes down
@@ -48,7 +48,7 @@ class Scalper extends Command
 	 *
 	 * @var int
 	 */
-	protected $trailing = 1;
+	protected $trailing = 2;
 
 	/**
 	 * Stop loss if it goes below bought price
@@ -105,24 +105,36 @@ class Scalper extends Command
 					'exchange' => $exchangeId,
 				);
 
-				$data = $this->getLatestData($pairs['symbol'], 80, $this->timeFrame);
+				$data = $this->getLatestData($pairs['symbol'], 60, $this->timeFrame);
 				$price = array_slice($data[$exchangeId]['close'], -2, 2, false);
 				$lastPrice = $price[1];
 				$prevPrice = $price[0];
 				$candle = $prevPrice < $lastPrice ? 'green' : 'red';
 				$headers .= "| " . $pairs['symbol'] . " <bg=$candle>" . $lastPrice . "</> | ";
+				$bid = $price = array_slice($data[$exchangeId]['bid'], -1, 1, false)[0];
 
 				if ($this->trailingServices->checkTrailing($params)) {
-					$indicators[] = $pairs['symbol'] . ' -> Trailing in progress ...';
+					$indicators[] = $pairs['symbol'] . '<fg=yellow> -> Trailing in progress ...</>';
 				} else {
 					$response = $this->sar_stoch($data[$exchangeId]);
-					if ($response == 1) {
-						if ($this->tradeServices->orderBuy($params['strategy'], $pairs['symbol'], $exchangeId,
-							$price)) {
-							$this->trailingServices->initialPrice($price, $this->trailing, $params);
-						} // if
-					} // if
-					$indicators[] = $state = $pairs['symbol'] . " | " . $response . " | ";
+
+					switch ($response) {
+						case 1:
+							$state = "<bg=green>$response</> | Buy signal!";
+							if ($this->tradeServices->orderBuy($params['strategy'], $pairs['symbol'], $exchangeId,
+								$bid)) {
+								$this->trailingServices->initialPrice($bid, $this->trailing, $params);
+							} // if
+							break;
+						case -1:
+							$state = "<bg=red>$response</> | Sell signal by sar,stoch and stochf ... Do nothing.";
+							break;
+						case 0:
+							$state = "$response | Nothing to do.";
+							break;
+					} // switch
+
+					$indicators[] = $state = $pairs['symbol'] . " | " . $state;
 				} // if
 			} // foreach
 

@@ -118,7 +118,7 @@ class TrailingServices
 
 		if ($price->bid > $trailing->fix_sell) {
 			$percentage = $trailing->trailing / 100;
-			$sell = $price->ask - ($price->ask * $percentage);
+			$sell = $price->bid - ($price->bid * $percentage);
 
 			$trailing->update(
 				array(
