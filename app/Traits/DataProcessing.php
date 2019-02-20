@@ -15,13 +15,15 @@ trait DataProcessing
 	use TimeWrapper;
 
 	/**
-	 * @param $datas
+	 * Returns latest data organized for trader use
+	 *
+	 * @param     $datas
+	 * @param int $limit
 	 *
 	 * @return array
 	 */
 	private function organizePairData($datas, $limit = 999)
 	{
-		// TODO refactor this to normal response
 		$ret = array();
 		foreach ($datas as $data) {
 			$ret[$data->exchange_id]['timestamp'][] = $data->buckettime;
@@ -33,13 +35,18 @@ trait DataProcessing
 			$ret[$data->exchange_id]['bid'][] = $data->bid;
 			$ret[$data->exchange_id]['ask'][] = $data->ask;
 			$ret[$data->exchange_id]['volume'][] = $data->volume;
-		}
+		} // foreach
+
 		foreach ($ret as $ex => $opt) {
+			$ret[$ex]['lastPrice'] = $ret[$ex]['close'][0];
+			$ret[$ex]['prevPrice'] = $ret[$ex]['close'][1];
+			$ret[$ex]['lastBid'] = $ret[$ex]['bid'][0];
+			$ret[$ex]['lastAsk'] = $ret[$ex]['ask'][0];
 			foreach ($opt as $key => $rettemmp) {
 				$ret[$ex][$key] = array_reverse($rettemmp);
 				$ret[$ex][$key] = array_slice($ret[$ex][$key], 0, $limit, true);
 			}
-		}
+		} // foreach
 		return $ret;
 	}
 
