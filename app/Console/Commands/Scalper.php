@@ -106,13 +106,8 @@ class Scalper extends Command
 				);
 
 				$data = $this->getLatestData($pairs['symbol'], 60, $this->timeFrame);
-				$price = array_slice($data[$exchangeId]['close'], -2, 2, false);
-				$lastPrice = $price[1];
-				$prevPrice = $price[0];
-				$candle = $prevPrice < $lastPrice ? 'green' : 'red';
-				$headers .= "| " . $pairs['symbol'] . " <bg=$candle>" . $lastPrice . "</> | ";
-				$bid = array_slice($data[$exchangeId]['bid'], -1, 1, false)[0];
-				$ask = array_slice($data[$exchangeId]['ask'], -1, 1, false)[0];
+				$candle = $data[$exchangeId]['prevPrice'] < $data[$exchangeId]['lastPrice'] ? 'green' : 'red';
+				$headers .= "| " . $pairs['symbol'] . " <bg=$candle>" . $data[$exchangeId]['lastPrice'] . "</> | ";
 
 				if ($this->trailingServices->checkTrailing($params)) {
 					$indicators[] = $pairs['symbol'] . '<fg=yellow> -> Trailing in progress ...</>';
@@ -123,8 +118,8 @@ class Scalper extends Command
 						case 1:
 							$state = "<bg=green>$response</> | Buy signal!";
 							if ($this->tradeServices->orderBuy($params['strategy'], $pairs['symbol'], $exchangeId,
-								$ask)) {
-								$this->trailingServices->initialPrice($bid, $this->trailing, $params);
+								$data[$exchangeId]['lastAsk'])) {
+								$this->trailingServices->initialPrice($data[$exchangeId]['lastBid'], $this->trailing, $params);
 							} // if
 							break;
 						case -1:
