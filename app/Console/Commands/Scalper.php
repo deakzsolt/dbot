@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Models\Exchanges;
-use App\Models\Trailing;
 use App\Services\TradeServices;
 use App\Models\Ticker;
 use App\Services\TrailingServices;
@@ -49,15 +48,6 @@ class Scalper extends Command
 	 * @var int
 	 */
 	protected $trailing = 2;
-
-	/**
-	 * Stop loss if it goes below bought price
-	 * This is in percentage
-	 * so min is 1 and max is 100
-	 *
-	 * @var float
-	 */
-	protected $stopLoss = 0.5;
 
 	/**
 	 * @var tradeServices
@@ -126,7 +116,7 @@ class Scalper extends Command
 							$state = "<bg=red>$response | Sell signal by sar,stoch and stochf ... Do nothing.</>";
 							break;
 						case 0:
-							$state = "$response | Nothing to do.";
+							$state = "$response | Nothing to do, its boring.";
 							break;
 					} // switch
 

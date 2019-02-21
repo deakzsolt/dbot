@@ -115,7 +115,7 @@ class TrailingServices
 	private function updateTrailing($trailing, $params)
 	{
 		$price = $this->ticker->getLastDataByPair($params['symbol'], $params['exchange'])->first();
-		$fullTrailing = $this->trailingCalculate($trailing,$price->bid,'sum');
+		$fullTrailing = $this->trailingCalculate($trailing,$trailing->fix_sell,'sum');
 
 		if ($price->bid > $fullTrailing) {
 //			$percentage = $trailing->trailing / 100;
