@@ -115,29 +115,49 @@ class TrailingServices
 	private function updateTrailing($trailing, $params)
 	{
 		$price = $this->ticker->getLastDataByPair($params['symbol'], $params['exchange'])->first();
+		$fullTrailing = $this->trailingCalculate($trailing,$price->bid,'sum');
 
-		if ($price->bid > $trailing->fix_sell) {
-			$percentage = $trailing->trailing / 100;
-			$sell = $price->bid - ($price->bid * $percentage);
+		if ($price->bid > $fullTrailing) {
+//			$percentage = $trailing->trailing / 100;
+//			$sell = $price->bid - ($price->bid * $percentage);
+			$sell = $this->trailingCalculate($trailing,$price->bid);
 
-			$trailing->update(
-				array(
-					'fix_sell' => $sell
-				)
-			);
+			$trailing->update(array(
+					'fix_sell' => $sell,
+				));
 		} // if
 
 		if ($price->bid <= $trailing->fix_sell) {
-			$this->tradeServices->orderSell($params['strategy'], $params['symbol'],
-				$params['exchange'],$price->bid);
+			$this->tradeServices->orderSell($params['strategy'], $params['symbol'], $params['exchange'], $price->bid);
 
-			$trailing->update(
-				array(
-					'state' => 'closed'
-				)
-			);
+			$trailing->update(array(
+					'state' => 'closed',
+				));
 		} // if
 
 		return true;
+	}
+
+	/**
+	 * Extract or sum the trailing price
+	 *
+	 * @param        $trailing
+	 * @param        $price
+	 * @param string $function
+	 *
+	 * @return float|int
+	 */
+	private function trailingCalculate($trailing, $price, $function = 'extract')
+	{
+		$percentage = $trailing->trailing / 100;
+		if ($function == 'extract') {
+			$price = $price - ($price * $percentage);
+		} // if
+
+		if ($function == 'sum') {
+			$price = $price + ($price * $percentage);
+		} // if
+
+		return $price;
 	}
 }
