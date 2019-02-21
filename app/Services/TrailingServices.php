@@ -117,9 +117,8 @@ class TrailingServices
 		$price = $this->ticker->getLastDataByPair($params['symbol'], $params['exchange'])->first();
 		$fullTrailing = $this->trailingCalculate($trailing,$trailing->fix_sell,'sum');
 
+//		TODO might be good to track the ask too if it goes up a lot and the bid is not following
 		if ($price->bid > $fullTrailing) {
-//			$percentage = $trailing->trailing / 100;
-//			$sell = $price->bid - ($price->bid * $percentage);
 			$sell = $this->trailingCalculate($trailing,$price->bid);
 
 			$trailing->update(array(
