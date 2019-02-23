@@ -19,7 +19,7 @@ class Scalper extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'run:scalper';
+	protected $signature = 'run:scalper {display=false}';
 
 	/**
 	 * The console command description.
@@ -80,8 +80,11 @@ class Scalper extends Command
 	public function handle()
 	{
 		// TODO when done move to cron
+		$display = $this->argument('display') == 'false' ? false : true;
 
-		$this->line(date('Y-m-d H:i:s') . " - <bg=yellow>Simple indicator test for Parabolic SAR with Stochastic ...</>");
+		if ($display) {
+			$this->line(date('Y-m-d H:i:s') . " - <bg=yellow>Simple indicator test for Parabolic SAR with Stochastic ...</>");
+		} // if
 
 		$exchangeId = Exchanges::where('slug', 'poloniex')->first()->id;
 		while (1) {
@@ -109,7 +112,8 @@ class Scalper extends Command
 							$state = "<bg=green>$response | Buy signal!</>";
 							if ($this->tradeServices->orderBuy($params['strategy'], $pairs['symbol'], $exchangeId,
 								$data[$exchangeId]['lastAsk'])) {
-								$this->trailingServices->initialPrice($data[$exchangeId]['lastBid'], $this->trailing, $params);
+								$this->trailingServices->initialPrice($data[$exchangeId]['lastBid'], $this->trailing,
+									$params);
 							} // if
 							break;
 						case -1:
@@ -124,14 +128,16 @@ class Scalper extends Command
 				} // if
 			} // foreach
 
-			$this->line(date('Y-m-d H:i:s') . " - " . $headers);
+			if ($display) {
+				$this->line(date('Y-m-d H:i:s') . " - " . $headers);
 
-			foreach ($indicators as $indicator) {
-				$this->line($indicator);
-				usleep(100000);
-			}
+				foreach ($indicators as $indicator) {
+					$this->line($indicator);
+					usleep(100000);
+				}
 
-			$this->info(date('Y-m-d H:i:s') . " - Count the sheep's now ...\n");
+				$this->info(date('Y-m-d H:i:s') . " - Count the sheep's now ...\n");
+			} // if
 			sleep(5);
 
 		} // while
