@@ -116,6 +116,7 @@ class TradeServices
 				$newAmount = $position->amount * $price;
 				$difference = $newAmount - $position->trade;
 				$percentage = $difference / $position->trade * 100;
+				$percentage = number_format((float)$percentage, 2, '.', '');
 
 				$trade = new Trades();
 				$trade->fill(array(
