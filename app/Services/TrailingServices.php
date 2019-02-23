@@ -90,7 +90,8 @@ class TrailingServices
 		if ($openTrade->count() > 0) {
 			$trade = $openTrade->first();
 
-			$lastTrailing = $this->trailing::where('trade_id', $trade->id);
+			$lastTrailing = $this->trailing::where('trade_id', $trade->id)
+				->where('state','open');
 
 			if ($lastTrailing->count() > 0) {
 
@@ -115,14 +116,12 @@ class TrailingServices
 	private function updateTrailing($trailing, $params)
 	{
 		$price = $this->ticker->getLastDataByPair($params['symbol'], $params['exchange'])->first();
-		$fullTrailing = $this->trailingCalculate($trailing,$trailing->fix_sell,'sum');
-
+		$bid = $this->trailingCalculate($trailing,$price->bid);
 //		TODO might be good to track the ask too if it goes up a lot and the bid is not following
-		if ($price->bid > $fullTrailing) {
-			$sell = $this->trailingCalculate($trailing,$price->bid);
+		if ($bid > $trailing->fix_sell) {
 
 			$trailing->update(array(
-					'fix_sell' => $sell,
+					'fix_sell' => $bid,
 				));
 		} // if
 
