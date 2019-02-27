@@ -1,14 +1,68 @@
-
 // Fonts
 @import url('https://fonts.googleapis.com/css?family=Nunito');
-
 // Variables
 @import 'variables';
-
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 
 .navbar-laravel {
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+	background-color: #fff;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+html, body {
+	background-color: #1f2833;
+	color: #636b6f;
+	font-family: 'Nunito', sans-serif;
+	font-weight: 200;
+	height: 100vh;
+	margin: 0;
+}
+
+.full-height {
+	height: 100vh;
+}
+
+.flex-center {
+	align-items: center;
+	display: flex;
+	justify-content: center;
+}
+
+.position-ref {
+	position: relative;
+}
+
+.open-trades {
+	width: 1114px;
+	margin: 30px auto;
+	background: #C5C6C7;
+	border-radius: 5px;
+	ul {
+		padding: 0px 35px 35px 35px;
+	}
+	li {
+		display: block;
+		list-style: none;
+	}
+}
+
+.container {
+	margin-bottom: 50px;
+	.trade {
+		display: inline-block;
+		text-align: left;
+		vertical-align: top;
+		padding: 0 20px;
+		h3 {
+			font-size: 19px;
+			font-weight: bolder;
+		}
+		p {
+			margin-bottom: 2px;
+		}
+	}
+	.date {
+		font-size: 10px;
+	}
 }
