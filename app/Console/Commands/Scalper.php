@@ -38,7 +38,7 @@ class Scalper extends Command
 	 *
 	 * @var string
 	 */
-	protected $timeFrame = '1h';
+	protected $timeFrame = '30m';
 
 	/**
 	 * Sell if highest price goes down

@@ -325,7 +325,7 @@ class Indicators
 		#$prev_close = $data['close'][count($data['close']) - 2]; // prior close
 		#$current = $data['close'][count($data['close']) - 1];    // we assume this is current
 		#high,low,close, fastk_period, slowk_period, slowk_matype, slowd_period, slowd_matype
-		$stoch = trader_stoch($data['high'], $data['low'], $data['close'], 13, 3, $slowk_matype, 3, $slowd_matype);
+		$stoch = trader_stoch($data['high'], $data['low'], $data['close'], 14, 3, $slowk_matype, 3, $slowd_matype);
 		$slowk = $stoch[0];
 		$slowd = $stoch[1];
 		$slowk = array_pop($slowk); #$slowk[count($slowk) - 1];
@@ -366,7 +366,7 @@ class Indicators
 		#$prev_close = $data['close'][count($data['close']) - 2]; // prior close
 		#$current = $data['close'][count($data['close']) - 1];    // we assume this is current
 		#high,low,close, fastk_period, slowk_period, slowk_matype, slowd_period, slowd_matype
-		$stoch = trader_stochf($data['high'], $data['low'], $data['close'], 13, 3, $matype);
+		$stoch = trader_stochf($data['high'], $data['low'], $data['close'], 14, 3, $matype);
 		$fastk = $stoch[0];
 		$fastd = $stoch[1];
 		$fastk = array_pop($fastk); #$slowk[count($slowk) - 1];
@@ -521,7 +521,7 @@ class Indicators
 	 *
 	 * @return int|string
 	 */
-	public function sar($data, $period = 14, $acceleration = 0.02, $maximum = 0.02)
+	public function sar($data, $period = 14, $acceleration = 0.02, $maximum = 0.2)
 	{
 		if (empty($data)) {
 			return "The data is empty! Provide some data";
