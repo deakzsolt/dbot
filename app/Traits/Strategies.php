@@ -12,16 +12,6 @@ use App\Utils\Indicators;
 
 trait Strategies
 {
-	/**
-	 * @var Indicators
-	 */
-	private $indicators;
-
-	public function __construct(Indicators $indicators)
-	{
-		$this->indicators = $indicators;
-	}
-
 	public $strategyNames = array(
 		'sma_stoch_rsi',
 		'sma_stoch',
@@ -220,7 +210,7 @@ trait Strategies
 	 *
 	 * @return int
 	 */
-	public function sar_stoch($data)
+	public function sar_stoch(array $data)
 	{
 		$indicators = new Indicators();
 
@@ -243,10 +233,11 @@ trait Strategies
 	 *
 	 * @return int
 	 */
-	public function dbotStochAdx($data)
+	public function dbotStochAdx(array $data)
 	{
-		$stochastic = $this->indicators->dbotStochastic($data, 14, 3, 3, 14, 3);
-		$adx = $this->indicators->dbotAdx($data,14);
+		$indicators = new Indicators();
+		$stochastic = $indicators->dbotStochastic($data, 14, 3, 3, 14, 3);
+		$adx = $indicators->dbotAdx($data,14);
 
 		if ($stochastic == 1 && $adx == 1) {
 			return 1;

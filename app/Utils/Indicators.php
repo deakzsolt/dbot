@@ -405,6 +405,7 @@ class Indicators
 			$timePeriod
 		);
 
+		// TODO check is the $adx declining or growing
 		if (array_pop($adx)>25) {
 			return 1;
 		} // if

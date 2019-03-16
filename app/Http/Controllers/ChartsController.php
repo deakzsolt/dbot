@@ -26,6 +26,11 @@ class ChartsController extends Controller
 		return trader_stoch($data['high'], $data['low'], $data['close'], 14, 3, 3, 14, 3);
 	}
 
+	/**
+	 * Returns Json formatted data to the Charts
+	 *
+	 * @return array
+	 */
 	public function getChartData()
 	{
 		$exchangeId = Exchanges::where('slug', 'poloniex')->first()->id;

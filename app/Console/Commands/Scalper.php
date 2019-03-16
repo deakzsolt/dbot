@@ -50,12 +50,12 @@ class Scalper extends Command
 	protected $trailing = 2;
 
 	/**
-	 * @var tradeServices
+	 * @var TradeServices
 	 */
 	protected $tradeServices;
 
 	/**
-	 * @var trailingServices
+	 * @var TrailingServices
 	 */
 	protected $trailingServices;
 
@@ -97,7 +97,7 @@ class Scalper extends Command
 					'exchange' => $exchangeId,
 				);
 
-				$data = $this->getLatestData($pairs['symbol'], 60, $this->timeFrame);
+				$data = $this->getLatestData($pairs['symbol'], 150, $this->timeFrame);
 				$candle = $data[$exchangeId]['prevPrice'] < $data[$exchangeId]['lastPrice'] ? 'green' : 'red';
 				$headers .= "| " . $pairs['symbol'] . " <bg=$candle>" . $data[$exchangeId]['lastPrice'] . "</> | ";
 
