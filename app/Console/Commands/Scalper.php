@@ -79,7 +79,6 @@ class Scalper extends Command
 	 */
 	public function handle()
 	{
-		// TODO when done move to cron
 		$display = $this->argument('display') == 'false' ? false : true;
 
 		if ($display) {
@@ -93,7 +92,7 @@ class Scalper extends Command
 			foreach (Ticker::getPairs() as $pairs) {
 
 				$params = array(
-					'strategy' => 'strategy_trailing_sar',
+					'strategy' => 'strategy_stoch_adx',
 					'symbol'   => $pairs['symbol'],
 					'exchange' => $exchangeId,
 				);
@@ -105,7 +104,7 @@ class Scalper extends Command
 				if ($this->trailingServices->checkTrailing($params)) {
 					$indicators[] = $pairs['symbol'] . '<fg=yellow> -> Trailing in progress ...</>';
 				} else {
-					$response = $this->sar_stoch($data[$exchangeId]);
+					$response = $this->dbotStochAdx($data[$exchangeId]);
 
 					switch ($response) {
 						case 1:
@@ -117,10 +116,10 @@ class Scalper extends Command
 							} // if
 							break;
 						case -1:
-							$state = "<bg=red>$response | Sell signal by sar,stoch and stochf ... Do nothing.</>";
+							$state = "<bg=red>$response | Sell signal by strategy ... Do nothing.</>";
 							break;
 						case 0:
-							$state = "$response | Nothing to do, its boring.";
+							$state = "$response | Nothing to do, it's boring.";
 							break;
 					} // switch
 

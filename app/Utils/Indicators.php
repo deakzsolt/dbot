@@ -346,6 +346,73 @@ class Indicators
 	}
 
 	/**
+	 * Dbot Stochastic
+	 *
+	 * @param array $data
+	 * @param int   $fastK_Period
+	 * @param int   $slowK_Period
+	 * @param int   $slowK_MAType
+	 * @param int   $slowD_Period
+	 * @param int   $slowD_MAType
+	 *
+	 * @return int
+	 */
+	public function dbotStochastic(array $data, int $fastK_Period, int $slowK_Period, int $slowK_MAType, int $slowD_Period, int $slowD_MAType)
+	{
+		$stochastic = trader_stoch(
+			$data['high'],
+			$data['low'],
+			$data['close'],
+			$fastK_Period,
+			$slowK_Period,
+			$slowK_MAType,
+			$slowD_Period,
+			$slowD_MAType
+		);
+		$slowk = $stochastic[0];
+		$slowd = $stochastic[1];
+		$slowk = array_pop($slowk);
+		$slowd = array_pop($slowd);
+
+		if ($slowk < 20 || $slowd < 20) {
+			if ($slowk>$slowd) {
+				return 1;
+			} // if
+		} elseif ($slowk > 80 || $slowd > 80) {
+			if ($slowk<$slowd) {
+				return -1;
+			} // if
+
+		} // if
+
+		return 0;
+	}
+
+	/**
+	 * Dbot ADX
+	 *
+	 * @param array $data
+	 * @param int   $timePeriod
+	 *
+	 * @return int
+	 */
+	public function dbotAdx(array $data, int $timePeriod)
+	{
+		$adx = trader_adx(
+			$data['high'],
+			$data['low'],
+			$data['close'],
+			$timePeriod
+		);
+
+		if (array_pop($adx)>25) {
+			return 1;
+		} // if
+
+		return 0;
+	}
+
+	/**
 	 * Fast Stochastic
 	 *
 	 * @param     $data
