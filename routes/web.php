@@ -16,3 +16,8 @@
 //});
 
 Route::get('/', 'TradesController@index');
+
+Route::get('/charts', function() {
+	return view('charts.index');
+});
+Route::get('/charts/data', 'ChartsController@getChartData');

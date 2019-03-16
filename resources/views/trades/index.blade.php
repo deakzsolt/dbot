@@ -16,9 +16,17 @@
 <div class="open-trades">
 	<h2 class="text-center">Open trades</h2>
 	<ul>
-		<li><b>BTC/USDT:</b> | 0.73 BTC | 99.97 USD | 136.5 USDT | <b>Trailing:</b> | 2% | 136.29 USD | -0.1 USDT | -0.12% |</li>
-		<li><b>ETH/USDT:</b> 0.73 99.97 136.5 <b>Trailing:</b> 2% 136.29</li>
-		<li><b>LTC/USDT:</b> 0.73 99.97 136.5 <b>Trailing:</b> 2% 136.29</li>
+	@foreach($openTrades as $open)
+		@php
+		$symbols = explode('/',$open->symbol);
+		$boughtSymbol = $symbols[0];
+		$investedSymbol = $symbols[1];
+		$profit =  number_format($open->fix_sell - $open->price,2);
+		$percentage = ($profit / $open->price) * 100;
+		$percentage = number_format($percentage,2);
+		@endphp
+			<li><b>{{$open->symbol}}:</b> | {{$open->amount}} {{$boughtSymbol}} | {{$open->price}} {{$investedSymbol}} | {{$open->trade}} {{$investedSymbol}} | <b>Trailing:</b> | {{$open->trailing}}% | {{$open->fix_sell}} {{$investedSymbol}} | {{$profit}} USDT | {{$percentage}}% |</li>
+	@endforeach
 	</ul>
 </div>
 <div class="position-ref full-height text-center">
