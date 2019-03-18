@@ -37,7 +37,7 @@ class ChartsController extends Controller
 		$data = $this->getLatestData('BTC/USDT', 100, $this->timeFrame)[$exchangeId];
 
 		$stochastic = trader_stoch($data['high'], $data['low'], $data['close'], 14, 3, 3, 14, 3);
-		$adx = trader_adx($data['high'], $data['low'], $data['close'],14);
+		$adx = trader_adx($data['high'], $data['low'], $data['close'],10);
 
 
 		$response = array();

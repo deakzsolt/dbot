@@ -391,6 +391,8 @@ class Indicators
 	/**
 	 * Dbot ADX
 	 *
+	 * if used under 1h time period the period should be set to 10 in other case it should be 14
+	 *
 	 * @param array $data
 	 * @param int   $timePeriod
 	 *
