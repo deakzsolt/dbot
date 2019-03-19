@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ccxt/ccxt.git",
-                "reference": "75e029b528bf0554279bea184e15b07a9ead5605"
+                "reference": "b0e1a61798d706574c7b8877104d2676b338e665"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ccxt/ccxt/zipball/75e029b528bf0554279bea184e15b07a9ead5605",
-                "reference": "75e029b528bf0554279bea184e15b07a9ead5605",
+                "url": "https://api.github.com/repos/ccxt/ccxt/zipball/b0e1a61798d706574c7b8877104d2676b338e665",
+                "reference": "b0e1a61798d706574c7b8877104d2676b338e665",
                 "shasum": ""
             },
             "require": {
@@ -267,7 +267,7 @@
                 "zec",
                 "zerocoin"
             ],
-            "time": "2019-03-16T17:09:23+00:00"
+            "time": "2019-03-19T17:34:30+00:00"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -762,16 +762,16 @@
         },
         {
             "name": "erusev/parsedown",
-            "version": "1.7.1",
+            "version": "v1.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/erusev/parsedown.git",
-                "reference": "92e9c27ba0e74b8b028b111d1b6f956a15c01fc1"
+                "reference": "d60bcdc46978357759ecb13cb4b078da783f8faf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/erusev/parsedown/zipball/92e9c27ba0e74b8b028b111d1b6f956a15c01fc1",
-                "reference": "92e9c27ba0e74b8b028b111d1b6f956a15c01fc1",
+                "url": "https://api.github.com/repos/erusev/parsedown/zipball/d60bcdc46978357759ecb13cb4b078da783f8faf",
+                "reference": "d60bcdc46978357759ecb13cb4b078da783f8faf",
                 "shasum": ""
             },
             "require": {
@@ -804,7 +804,7 @@
                 "markdown",
                 "parser"
             ],
-            "time": "2018-03-08T01:11:30+00:00"
+            "time": "2019-03-17T17:19:46+00:00"
         },
         {
             "name": "fgrosse/phpasn1",

@@ -2,17 +2,15 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Exchanges;
-use App\Services\TradeServices;
-use App\Models\Ticker;
-use App\Services\TrailingServices;
-use Illuminate\Console\Command;
+use App\Models\{Exchanges,Ticker};
+use App\Services\{TradeServices,TrailingServices};
 use App\Traits\DataProcessing;
-use App\Traits\Strategies;
+use App\Utils\Strategies;
+use Illuminate\Console\Command;
 
 class Scalper extends Command
 {
-	use DataProcessing, Strategies;
+	use DataProcessing;
 
 	/**
 	 * The name and signature of the console command.
@@ -26,7 +24,7 @@ class Scalper extends Command
 	 *
 	 * @var string
 	 */
-	protected $description = 'This is a scalper trading mostly for day trading with SAR indicator as buy and trailing for sell';
+	protected $description = 'This is a scalper trading mostly for day trading, under testing!';
 
 	/**
 	 * Time Frame for data
@@ -60,15 +58,22 @@ class Scalper extends Command
 	protected $trailingServices;
 
 	/**
+	 * @var Strategies
+	 */
+	private $strategies;
+
+	/**
 	 * Scalper constructor.
 	 *
 	 * @param TradeServices    $TradeServices
 	 * @param TrailingServices $TrailingServices
+	 * @param Strategies       $strategies
 	 */
-	public function __construct(TradeServices $TradeServices, TrailingServices $TrailingServices)
+	public function __construct(TradeServices $TradeServices, TrailingServices $TrailingServices, Strategies $strategies)
 	{
 		$this->tradeServices = $TradeServices;
 		$this->trailingServices = $TrailingServices;
+		$this->strategies = $strategies;
 		parent::__construct();
 	}
 
@@ -101,22 +106,27 @@ class Scalper extends Command
 				$candle = $data[$exchangeId]['prevPrice'] < $data[$exchangeId]['lastPrice'] ? 'green' : 'red';
 				$headers .= "| " . $pairs['symbol'] . " <bg=$candle>" . $data[$exchangeId]['lastPrice'] . "</> | ";
 
-				if ($this->trailingServices->checkTrailing($params)) {
-					$indicators[] = $pairs['symbol'] . '<fg=yellow> -> Trailing in progress ...</>';
-				} else {
-					$response = $this->dbotStochAdx($data[$exchangeId]);
+//				if ($this->trailingServices->checkTrailing($params)) {
+//					$indicators[] = $pairs['symbol'] . '<fg=yellow> -> Trailing in progress ...</>';
+//				} else {
+					$response = $this->strategies->dbotStochAdx($data[$exchangeId]);
 
 					switch ($response) {
 						case 1:
 							$state = "<bg=green>$response | Buy signal!</>";
-							if ($this->tradeServices->orderBuy($params['strategy'], $pairs['symbol'], $exchangeId,
-								$data[$exchangeId]['lastAsk'])) {
-								$this->trailingServices->initialPrice($data[$exchangeId]['lastBid'], $this->trailing,
-									$params);
-							} // if
+							$this->tradeServices->orderBuy($params['strategy'], $pairs['symbol'], $exchangeId,
+								$data[$exchangeId]['lastAsk']);
+
+//							if ($this->tradeServices->orderBuy($params['strategy'], $pairs['symbol'], $exchangeId,
+//								$data[$exchangeId]['lastAsk'])) {
+//								$this->trailingServices->initialPrice($data[$exchangeId]['lastBid'], $this->trailing,
+//									$params);
+//							} // if
 							break;
 						case -1:
-							$state = "<bg=red>$response | Sell signal by strategy ... Do nothing.</>";
+							$state = "<bg=red>$response | Sell signal by strategy!</>";
+							$this->tradeServices->orderSell($params['strategy'], $pairs['symbol'], $exchangeId,
+								$data[$exchangeId]['lastBid']);
 							break;
 						case 0:
 							$state = "$response | Nothing to do, it's boring.";
@@ -124,7 +134,7 @@ class Scalper extends Command
 					} // switch
 
 					$indicators[] = $state = $pairs['symbol'] . " | " . $state;
-				} // if
+//				} // if
 			} // foreach
 
 			if ($display) {

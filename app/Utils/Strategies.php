@@ -6,12 +6,26 @@
  * Time: 14:42
  */
 
-namespace App\Traits;
+namespace App\Utils;
 
-use App\Utils\Indicators;
-
-trait Strategies
+class Strategies
 {
+
+	/**
+	 * @var Indicators
+	 */
+	private $indicators;
+
+	/**
+	 * Strategies constructor.
+	 *
+	 * @param Indicators $indicators
+	 */
+	public function __construct(Indicators $indicators)
+	{
+		$this->indicators = $indicators;
+	}
+
 	public $strategyNames = array(
 		'sma_stoch_rsi',
 		'sma_stoch',
@@ -235,9 +249,8 @@ trait Strategies
 	 */
 	public function dbotStochAdx(array $data)
 	{
-		$indicators = new Indicators();
-		$stochastic = $indicators->dbotStochastic($data, 14, 3, 3, 14, 3);
-		$adx = $indicators->dbotAdx($data,14);
+		$stochastic = $this->indicators->dbotStochastic($data, 14, 3, 3, 14, 3);
+		$adx = $this->indicators->dbotAdx($data,10);
 
 		if ($stochastic == 1 && $adx == 1) {
 			return 1;

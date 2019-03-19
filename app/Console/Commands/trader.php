@@ -5,13 +5,13 @@ namespace App\Console\Commands;
 use App\Models\Exchanges;
 use App\Models\Ticker;
 use App\Models\Trades;
+use App\Utils\Strategies;
 use Illuminate\Console\Command;
 use App\Traits\DataProcessing;
-use App\Traits\Strategies;
 
 class trader extends Command
 {
-	use DataProcessing, Strategies;
+	use DataProcessing;
 
 	/**
 	 * The name and signature of the console command.
@@ -28,12 +28,18 @@ class trader extends Command
 	protected $description = 'Basic strategy with SMA, Stochastic and RSI.';
 
 	/**
-	 * Create a new command instance.
-	 *
-	 * @return void
+	 * @var Strategies
 	 */
-	public function __construct()
+	private $strategies;
+
+	/**
+	 * trader constructor.
+	 *
+	 * @param Strategies $strategies
+	 */
+	public function __construct(Strategies $strategies)
 	{
+		$this->strategies = $strategies;
 		parent::__construct();
 	}
 
@@ -63,7 +69,7 @@ class trader extends Command
 			foreach (Ticker::getPairs() as $pairs) {
 				$headers[] = $pairs['symbol'];
 				$datas = $this->getLatestData($pairs['symbol'], 228, '1h');
-				$response = $this->strategy_sma_stoch($datas[$exchangeId]);
+				$response = $this->strategies->strategy_sma_stoch($datas[$exchangeId]);
 
 				switch ($response['state']) {
 					case 1:
