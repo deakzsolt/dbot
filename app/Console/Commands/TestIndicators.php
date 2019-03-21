@@ -8,11 +8,10 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Exchanges;
+use App\Models\{Exchanges,Ticker};
 use App\Utils\Indicators;
 use Illuminate\Console\Command;
 use App\Traits\DataProcessing;
-use App\Ticker;
 
 class TestIndicators extends Command
 {
@@ -66,7 +65,6 @@ class TestIndicators extends Command
 
 			$this->table($headers, $body);
 			sleep(5);
-//			system('clear');
 		} // while
 	}
 }

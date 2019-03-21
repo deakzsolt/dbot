@@ -75,7 +75,7 @@ class TradeServices
 			 * $exchange = new gdax();
 			 * dd($exchange->describe()['fees']['trading']['taker']);
 			 */
-			
+
 			$trade = new Trades();
 			$trade->fill(
 				array(

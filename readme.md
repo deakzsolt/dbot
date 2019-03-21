@@ -62,6 +62,10 @@ ___
 
 1. high and low are for 24h so it can't be used in calculations - done
 2. Check TimeWarp import option into the database - done
-3. Create own Parabolic SAR indicator
+3. Create own Parabolic SAR indicator - wont do
 4. Test php precision for better calculation (especially for EMA) - done tested on SAR (add in php.ini ```trader.real_precision = 9```)
-5. Add other calculations for currency and crypto 
+5. Add other calculations for currency and crypto
+6. Set accountBalance checker (this should include to check is order executed)
+7. add in fee calculator
+8. Connect with BUY/SELL api (think good idea for maker trade not taker)
+9. Create exchange update command  
