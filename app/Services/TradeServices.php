@@ -69,20 +69,29 @@ class TradeServices
 				$this->tradingAmount = $closedTrade->first()->amount;
 			} // if
 
+			/**
+			 * TODO implement fee
+			 *
+			 * $exchange = new gdax();
+			 * dd($exchange->describe()['fees']['trading']['taker']);
+			 */
+			
 			$trade = new Trades();
-			$trade->fill(array(
-				'order_id'       => hash('sha256', now()->timestamp . $symbol),
-				'exchange_id'    => $exchange,
-				'symbol'         => $symbol,
-				'timestamp'      => now()->timestamp,
-				'strategy'       => $strategy,
-				'order'          => 'buy',
-				'status'         => 'open',
-				'order_executed' => 1,
-				'price'          => $price,
-				'trade'          => $this->tradingAmount,
-				'amount'         => $this->tradingAmount / $price,
-			))->save();
+			$trade->fill(
+				array(
+					'order_id'       => hash('sha256', now()->timestamp . $symbol),
+					'exchange_id'    => $exchange,
+					'symbol'         => $symbol,
+					'timestamp'      => now()->timestamp,
+					'strategy'       => $strategy,
+					'order'          => 'buy',
+					'status'         => 'open',
+					'order_executed' => 1,
+					'price'          => $price,
+					'trade'          => $this->tradingAmount,
+					'amount'         => $this->tradingAmount / $price,
+				)
+			)->save();
 
 			$this->handleOrder($exchange);
 
@@ -118,22 +127,31 @@ class TradeServices
 				$percentage = $difference / $position->trade * 100;
 				$percentage = number_format((float)$percentage, 2, '.', '');
 
+				/**
+				 * TODO implement fee
+				 *
+				 * $exchange = new gdax();
+				 * dd($exchange->describe()['fees']['trading']['taker']);
+				 */
+
 				$trade = new Trades();
-				$trade->fill(array(
-					'order_id'       => $position->order_id,
-					'exchange_id'    => $exchange,
-					'symbol'         => $symbol,
-					'timestamp'      => now()->timestamp,
-					'strategy'       => $strategy,
-					'order'          => 'sell',
-					'status'         => 'closed',
-					'order_executed' => 1,
-					'price'          => $price,
-					'trade'          => $position->amount,
-					'amount'         => $newAmount,
-					'profit'         => $difference,
-					'percentage'     => $percentage,
-				))->save();
+				$trade->fill(
+					array(
+						'order_id'       => $position->order_id,
+						'exchange_id'    => $exchange,
+						'symbol'         => $symbol,
+						'timestamp'      => now()->timestamp,
+						'strategy'       => $strategy,
+						'order'          => 'sell',
+						'status'         => 'closed',
+						'order_executed' => 1,
+						'price'          => $price,
+						'trade'          => $position->amount,
+						'amount'         => $newAmount,
+						'profit'         => $difference,
+						'percentage'     => $percentage,
+					)
+				)->save();
 
 				$this->handleOrder($exchange);
 

@@ -226,11 +226,9 @@ class Strategies
 	 */
 	public function sar_stoch(array $data)
 	{
-		$indicators = new Indicators();
-
-		$sar = $indicators->sar($data);
-		$stoch = $indicators->stoch($data);
-		$stochf = $indicators->stochf($data);
+		$sar = $this->indicators->sar($data);
+		$stoch = $this->indicators->stoch($data);
+		$stochf = $this->indicators->stochf($data);
 
 		if ($sar == -1 && ($stoch == -1 || $stochf == -1)) {
 			return -1;
