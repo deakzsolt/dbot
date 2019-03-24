@@ -14,12 +14,10 @@ class TradesController extends Controller
 	{
 		$buyTrades = Trades::where('status', 'closed')
 			->where('order', 'buy')
-			->join('trailings', 'trades.id', '=', 'trailings.trade_id')
 			->orderBy('trades.created_at', 'desc')
 			->get();
 		$openTrades = Trades::where('status', 'open')
 			->where('order', 'buy')
-			->join('trailings', 'trades.id', '=', 'trailings.trade_id')
 			->orderBy('trades.created_at', 'desc')
 			->get();
 

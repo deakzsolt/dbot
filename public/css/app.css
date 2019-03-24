@@ -10700,6 +10700,17 @@ body {
   list-style: none;
 }
 
+.open-trades li span {
+  display: inline-block;
+  width: 19.3%;
+}
+
+.open-trades .list-header {
+  font-weight: 900;
+  font-size: 18px;
+  color: #1b1e21;
+}
+
 .container {
   margin-bottom: 50px;
 }
