@@ -25,7 +25,7 @@ class TradeServices
 	 *
 	 * @var int
 	 */
-	protected $tradingAmount = 100;
+	protected $tradingAmount;
 
 	/**
 	 * TradeServices constructor.
@@ -35,6 +35,7 @@ class TradeServices
 	public function __construct(Trades $Trades)
 	{
 		$this->trades = $Trades;
+		$this->tradingAmount = 100;
 	}
 
 	/**
