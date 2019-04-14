@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class exchangePairs
@@ -16,6 +17,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ExchangePairs extends Model
 {
+	use SoftDeletes;
+
     /**
      * The attributes that are mass assignable.
      *
