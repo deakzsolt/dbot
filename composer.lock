@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ccxt/ccxt.git",
-                "reference": "3da5afdf56ec91e53f89a83b866e3933f8887fad"
+                "reference": "08a050a9162dbea45cb7fba5cd628fa62bca752a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ccxt/ccxt/zipball/3da5afdf56ec91e53f89a83b866e3933f8887fad",
-                "reference": "3da5afdf56ec91e53f89a83b866e3933f8887fad",
+                "url": "https://api.github.com/repos/ccxt/ccxt/zipball/08a050a9162dbea45cb7fba5cd628fa62bca752a",
+                "reference": "08a050a9162dbea45cb7fba5cd628fa62bca752a",
                 "shasum": ""
             },
             "require": {
@@ -276,7 +276,7 @@
                 "zec",
                 "zerocoin"
             ],
-            "time": "2019-08-15T14:49:28+00:00"
+            "time": "2019-08-15T16:27:38+00:00"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",
