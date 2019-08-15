@@ -15,3 +15,5 @@ mix.js('resources/js/app.js', 'public/js')
    .sass('resources/sass/app.scss', 'public/css/app.css');
 
 mix.babel('resources/js/charts.js', 'public/js/charts.js').version();
+
+mix.sass('resources/sass/whale-alerts.scss', 'public/css/whale-alerts.css');

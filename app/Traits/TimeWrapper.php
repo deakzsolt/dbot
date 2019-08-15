@@ -8,7 +8,10 @@
 
 namespace App\Traits;
 
-
+/**
+ * Trait TimeWrapper
+ * @package App\Traits
+ */
 trait TimeWrapper
 {
     /**

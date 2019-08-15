@@ -11,6 +11,10 @@ use ccxt\NetworkError;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Class DataImporter
+ * @package App\Console\Commands
+ */
 class DataImporter extends Command
 {
 	use TimeWrapper;

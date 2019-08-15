@@ -21,3 +21,5 @@ Route::get('/charts', function() {
 	return view('charts.index');
 });
 Route::get('/charts/data', 'ChartsController@getChartData');
+
+Route::get('/alerts','AlertsController@index');

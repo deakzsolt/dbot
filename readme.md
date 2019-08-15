@@ -54,6 +54,34 @@ Run the following command in order to get a view in command line.
 ```
 php artisan test:indicators
 ```
+
+#### Update exchange data
+From time to time this command should be executed as it will update the existing database with exchanges and pairs.
+Also if there are new exchanges this command will populate them with available pairs.
+This updates existing trading pairs (add's new or remove), also add new exchanges. 
+```
+1. composer update
+2. php artisan update:exchanges
+```
+
+#### Trading Scalper
+This is still under heavy development and it is not connected to any exchange.
+The idea behind this is that it will run in the background and will do the trades itself.
+```
+php artisan run:scalper display=true
+``` 
+
+#### Whale Alert
+This project is interesting so I have integrated into the dbot.
+For more information's visit https://whale-alert.io/.
+Register and create one api key. Setup in .env your API key:
+```
+WHALE_ALERT_KEY=GV8qwerAsP593Pp5ZOZTfNRgZoVsyN
+``` 
+
+TODO add in whale alert view!
+
+##### This might be good to set in cron job for weekly or monthly to do the self update.
 ___
 > This project is still under development and it is not 100% functional!
 ___
@@ -66,6 +94,6 @@ ___
 4. Test php precision for better calculation (especially for EMA) - done tested on SAR (add in php.ini ```trader.real_precision = 9```)
 5. Add other calculations for currency and crypto
 6. Set accountBalance checker (this should include to check is order executed)
-7. add in fee calculator
-8. Connect with BUY/SELL api (think good idea for maker trade not taker)
-9. Create exchange update command  
+7. add in fee calculator (this should be checked as maker or taker fee)
+8. Connect with BUY/SELL api (find good management for maker trade not taker as maker takes smaller fee)
+9. Create exchange update command  - done

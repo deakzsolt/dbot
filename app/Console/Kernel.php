@@ -25,6 +25,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('import:data')->withoutOverlapping()->everyMinute();
+//		$schedule->command('import:whalealert')->withoutOverlapping()->everyMinute();
     }
 
     /**

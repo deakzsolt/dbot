@@ -1,0 +1,44 @@
+html, body {
+	background-color: #1f2833;
+	//color: #636b6f;
+	//font-family: 'Nunito', sans-serif;
+	//font-weight: 200;
+	height: 100vh;
+	margin: 0;
+}
+
+.container {
+	width: 1114px;
+	margin: 30px auto;
+}
+
+.whale-alerts {
+	width: 100%;
+	background: #2B2B2B;
+	border-radius: 5px;
+	color: #B9C0CB;
+	word-break: break-word;
+	overflow-wrap: break-word;
+	font-family: "Courier New", Courier, monospace;
+	font-size: 12px;
+	padding: 14px 18px;
+	height: 448px;
+
+	span {
+		display: inline-block;
+	}
+
+	.date-time {
+		color: #A5C25C;
+	}
+
+	.symbol {
+		color: #CC7832;
+		font-weight: bolder;
+		text-transform: uppercase;
+	}
+
+	.transfers {
+		color: #629755;
+	}
+}
