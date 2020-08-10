@@ -10,6 +10,7 @@ use ccxt\ExchangeError;
 use ccxt\NetworkError;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use Exception;
 
 class DataImporter extends Command
 {
@@ -46,7 +47,7 @@ class DataImporter extends Command
      */
     public function handle()
     {
-        //        TODO add checker does exchange have ticker or ohlcvs
+        // TODO add checker does exchange have ticker or ohlcvs
         $getExchanges = unserialize(Options::where('item', 'DATA_IMPORTER')->first()->value);
 
         foreach ($getExchanges as $exchange => $pairs) {
@@ -103,7 +104,7 @@ class DataImporter extends Command
                     Log::warning('[Network Error] ' . $e->getMessage());
                 } catch (ExchangeError $e) {
                     Log::warning('[Exchange Error] ' . $e->getMessage());
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     Log::error('[Error] ' . $e->getMessage());
                 }
                 sleep(5);

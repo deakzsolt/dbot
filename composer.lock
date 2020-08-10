@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ccxt/ccxt.git",
-                "reference": "1494eb80c08bd1d5232ed0a0820d3bbbe1ae4722"
+                "reference": "6f64c01533703b986dd6c8e9fef0f82366b454c7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ccxt/ccxt/zipball/1494eb80c08bd1d5232ed0a0820d3bbbe1ae4722",
-                "reference": "1494eb80c08bd1d5232ed0a0820d3bbbe1ae4722",
+                "url": "https://api.github.com/repos/ccxt/ccxt/zipball/6f64c01533703b986dd6c8e9fef0f82366b454c7",
+                "reference": "6f64c01533703b986dd6c8e9fef0f82366b454c7",
                 "shasum": ""
             },
             "require": {
@@ -269,7 +269,13 @@
                 "zec",
                 "zerocoin"
             ],
-            "time": "2020-08-09T17:10:18+00:00"
+            "funding": [
+                {
+                    "url": "https://opencollective.com/ccxt",
+                    "type": "open_collective"
+                }
+            ],
+            "time": "2020-08-10T16:30:09+00:00"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -6415,5 +6421,6 @@
     "platform": {
         "php": "^7.2.10"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "1.1.0"
 }
