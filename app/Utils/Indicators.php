@@ -277,21 +277,31 @@ class Indicators
 			return "The data is empty! Provide some data";
 		} // if
 
+        if ($period > count($data['close'])) {
+            return "Period can't be smaller then the data!";
+        } // if
+
+
 		#$data2 = $data;
 		#$current = array_pop($data2['close']); #$data['close'][count($data['close']) - 1];    // we assume this is current
 		#$prev_close = array_pop($data2['close']); #$data['close'][count($data['close']) - 2]; // prior close
 		$rsi = trader_rsi($data['close'], $period);
-		$rsi = array_pop($rsi);
 
-		# RSI is above 70 and we own, sell
-		if ($rsi > $low) {
-			return -1;
-			# RSI is below 30, buy
-		} elseif ($rsi < $high) {
-			return 1;
-		} else {
-			return 0;
-		} // if
+        if ($rsi) {
+            $rsi = array_pop($rsi);
+            // TODO should this give back only the RSI array? or leave this here and make calculation elsewhere?
+            # RSI is above 70 and we own, sell
+            if ($rsi > $low) {
+                return -1;
+                # RSI is below 30, buy
+            } elseif ($rsi < $high) {
+                return 1;
+            } else {
+                return 0;
+            } // if
+        } else {
+            return "Ooops the trader_rsi failed! Double check what data is provided";
+        } // if
 	}
 
 	/**
