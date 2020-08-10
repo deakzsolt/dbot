@@ -9,66 +9,76 @@
 namespace App\Traits;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
+/**
+ * Trait DataProcessing
+ * @package App\Traits
+ */
 trait DataProcessing
 {
-	use TimeWrapper;
+    use TimeWrapper;
 
-	/**
-	 * Returns latest data organized for trader use
-	 *
-	 * @param     $datas
-	 * @param int $limit
-	 *
-	 * @return array
-	 */
-	private function organizePairData($datas, $limit = 999)
-	{
-		$ret = array();
-		foreach ($datas as $data) {
-			$ret[$data->exchange_id]['timestamp'][] = $data->buckettime;
-			$ret[$data->exchange_id]['date'][] = gmdate("j-M-y", $data->buckettime);
-			$ret[$data->exchange_id]['low'][] = $data->low;
-			$ret[$data->exchange_id]['high'][] = $data->high;
-			$ret[$data->exchange_id]['open'][] = $data->open;
-			$ret[$data->exchange_id]['close'][] = $data->close;
-			$ret[$data->exchange_id]['bid'][] = $data->bid;
-			$ret[$data->exchange_id]['ask'][] = $data->ask;
-			$ret[$data->exchange_id]['volume'][] = $data->volume;
-		} // foreach
+    /**
+     * @param     $datas
+     * @param int $limit
+     *
+     * @return array|string
+     */
+    private function organizePairData($datas, $limit = 999)
+    {
+        if (count($datas) != 1) {
+            $ret = [];
+            foreach ($datas as $data) {
+                $ret[$data->exchange_id]['timestamp'][] = $data->buckettime;
+                $ret[$data->exchange_id]['date'][] = gmdate("j-M-y", $data->buckettime);
+                $ret[$data->exchange_id]['low'][] = $data->low;
+                $ret[$data->exchange_id]['high'][] = $data->high;
+                $ret[$data->exchange_id]['open'][] = $data->open;
+                $ret[$data->exchange_id]['close'][] = $data->close;
+                $ret[$data->exchange_id]['bid'][] = $data->bid;
+                $ret[$data->exchange_id]['ask'][] = $data->ask;
+                $ret[$data->exchange_id]['volume'][] = $data->volume;
+            } // foreach
 
-		foreach ($ret as $ex => $opt) {
-			$ret[$ex]['lastPrice'] = $ret[$ex]['close'][0];
-			$ret[$ex]['prevPrice'] = $ret[$ex]['close'][1];
-			$ret[$ex]['lastBid'] = $ret[$ex]['bid'][0];
-			$ret[$ex]['lastAsk'] = $ret[$ex]['ask'][0];
-			foreach ($opt as $key => $rettemmp) {
-				$ret[$ex][$key] = array_reverse($rettemmp);
-				$ret[$ex][$key] = array_slice($ret[$ex][$key], 0, $limit, true);
-			}
-		} // foreach
-		return $ret;
-	}
+            foreach ($ret as $ex => $opt) {
+                $ret[$ex]['lastPrice'] = $ret[$ex]['close'][0];
+                $ret[$ex]['prevPrice'] = $ret[$ex]['close'][1];
+                $ret[$ex]['lastBid'] = $ret[$ex]['bid'][0];
+                $ret[$ex]['lastAsk'] = $ret[$ex]['ask'][0];
+                foreach ($opt as $key => $rettemmp) {
+                    $ret[$ex][$key] = array_reverse($rettemmp);
+                    $ret[$ex][$key] = array_slice($ret[$ex][$key], 0, $limit, true);
+                }
+            } // foreach
+            return $ret;
+        } else {
+            Log::error('There is not enough data to show results.');
+            return "There is not enough data to show results.";
+        } // if
+    }
 
-	/**
-	 * Returns latest data
-	 *
-	 * @param string $pair
-	 * @param int    $limit
-	 * @param string $periodSize
-	 *
-	 * @return array
-	 */
-	public function getLatestData($pair = 'BTC/USD', $limit = 168, $periodSize = '1m')
-	{
+    /**
+     * Returns latest data
+     *
+     * @param string $pair
+     * @param int    $limit
+     * @param string $periodSize
+     *
+     * @return array
+     */
+    public function getLatestData($pair = 'BTC/USD', $limit = 168, $periodSize = '1m')
+    {
 
-		$time = $this->periodSize($periodSize);
-		$timeSlice = $time['timeslice'];
+        $time = $this->periodSize($periodSize);
+        $timeSlice = $time['timeslice'];
 
-		$current_time = time();
-		$offset = ($current_time - ($timeSlice * $limit)) - 1;
+        $current_time = time();
+        $offset = ($current_time - ($timeSlice * $limit)) - 1;
 
-		$results = DB::select(DB::raw("
+        $results = DB::select(
+            DB::raw(
+                "
               SELECT
                 exchange_id,
                 SUBSTRING_INDEX(GROUP_CONCAT(CAST(open AS CHAR) ORDER BY datetime), ',', 1 ) AS `open`,
@@ -84,30 +94,34 @@ trait DataProcessing
               AND UNIX_TIMESTAMP(`datetime`) > ($offset)
               GROUP BY exchange_id, buckettime
               ORDER BY buckettime DESC
-          "));
+          "
+            )
+        );
 
-		return $this->organizePairData($results);
-	}
+        return $this->organizePairData($results);
+    }
 
-	/**
-	 * Returns latest data
-	 *
-	 * @param string $pair
-	 * @param int    $limit
-	 * @param string $periodSize
-	 *
-	 * @return array
-	 */
-	public function getLatestDataByBid($pair = 'BTC/USD', $limit = 168, $periodSize = '1m')
-	{
+    /**
+     * Returns latest data
+     *
+     * @param string $pair
+     * @param int    $limit
+     * @param string $periodSize
+     *
+     * @return array
+     */
+    public function getLatestDataByBid($pair = 'BTC/USD', $limit = 168, $periodSize = '1m')
+    {
 
-		$time = $this->periodSize($periodSize);
-		$timeSlice = $time['timeslice'];
+        $time = $this->periodSize($periodSize);
+        $timeSlice = $time['timeslice'];
 
-		$current_time = time();
-		$offset = ($current_time - ($timeSlice * $limit)) - 1;
+        $current_time = time();
+        $offset = ($current_time - ($timeSlice * $limit)) - 1;
 
-		$results = DB::select(DB::raw("
+        $results = DB::select(
+            DB::raw(
+                "
               SELECT
                 exchange_id,
                 SUBSTRING_INDEX(GROUP_CONCAT(CAST(bid AS CHAR) ORDER BY datetime), ',', 1 ) AS `open`,
@@ -124,8 +138,10 @@ trait DataProcessing
               AND UNIX_TIMESTAMP(`datetime`) > ($offset)
               GROUP BY exchange_id, buckettime
               ORDER BY buckettime DESC
-          "));
+          "
+            )
+        );
 
-		return $this->organizePairData($results);
-	}
+        return $this->organizePairData($results);
+    }
 }
