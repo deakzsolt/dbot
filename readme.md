@@ -69,3 +69,4 @@ ___
 7. add in fee calculator
 8. Connect with BUY/SELL api (think good idea for maker trade not taker)
 9. Create exchange update command  
+10. Check should the timeframe be under 5 minutes? as the dataImporter date warp in 5 minute.

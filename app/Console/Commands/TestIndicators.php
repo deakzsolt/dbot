@@ -53,14 +53,19 @@ class TestIndicators extends Command
 				$headers[] = $pair;
 				$data = $this->getLatestData($pair,228,'1h' );
 
-				$i = 0;
-				foreach ($indicators::$indicators as $indicator) {
-					$respons = $indicators->$indicator($data[$exchangeId]);
+				if (is_array($data)) {
+                    $i = 0;
+                    foreach ($indicators::$indicators as $indicator) {
+                        $respons = $indicators->$indicator($data[$exchangeId]);
 
-					$indicator = str_pad($indicator,20);
-					$body[$i][] = ($respons > 0 ? "<bg=green>$indicator</>" : ($respons < 0 ? "<bg=red>$indicator</>" : $indicator));
-					$i++;
-				} // foreach
+                        $indicator = str_pad($indicator,20);
+                        $body[$i][] = ($respons > 0 ? "<bg=green>$indicator</>" : ($respons < 0 ? "<bg=red>$indicator</>" : $indicator));
+                        $i++;
+                    } // foreach
+                } else {
+				    $this->error($data);
+				    exit();
+                } // if
 			} // foreach
 
 			$this->table($headers, $body);
