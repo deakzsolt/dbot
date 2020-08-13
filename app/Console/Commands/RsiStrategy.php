@@ -61,6 +61,7 @@ class RsiStrategy extends Command
             ];
 
             foreach($timeFrames as $timeFrame) {
+                $this->info('TimeFrame => '.$timeFrame);
                 $results = $this->getLatestData('BTC/USDT', 50, $timeFrame);
 
                 if ($results) {
