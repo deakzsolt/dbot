@@ -60,9 +60,9 @@ class RsiStrategy extends Command
                 '1h',
             ];
 
-            foreach($timeFrames as $timeFrame) {
-                $this->info('TimeFrame => '.$timeFrame);
-                $results = $this->getLatestData('BTC/USDT', 50, $timeFrame);
+            foreach ($timeFrames as $timeFrame) {
+                $this->line('<bg=green>TimeFrame => ' . $timeFrame . '</>');
+                $results = $this->getLatestData('BTC/USDT', 150, $timeFrame);
 
                 if ($results) {
                     $response = $this->strategies->strategy_rsi($results[$exchangeId]);
