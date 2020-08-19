@@ -8,7 +8,6 @@
 
 namespace App\Traits;
 
-
 trait TimeWrapper
 {
     /**
@@ -19,24 +18,31 @@ trait TimeWrapper
      */
     public function periodSize($periodSize)
     {
+        $time = preg_split('/(?<=[0-9])(?=[a-z]+)/i', $periodSize);
 
-        $secondsPerUnit = array(
+        $names = [
+            's' => 'second',
+            'm' => 'minute',
+            'h' => 'hour',
+            'd' => 'day',
+            'w' => 'week',
+        ];
+        $name = $names[$time[1]];
+        $timescale = ($time[0] == 1) ? '1 ' . $name : "$time[0] {$name}s";
+
+        $secondsPerUnit = [
             's' => 1,
             'm' => 60,
             'h' => 3600,
             'd' => 86400,
-            'w' => 604800
-        );
+            'w' => 604800,
+        ];
+        $seconds = $time[0] * $secondsPerUnit[$time[1]];
 
-        $time = preg_split('/(?<=[0-9])(?=[a-z]+)/i',$periodSize);
-
-        $seconds = $time[0]*$secondsPerUnit[$time[1]];
-
-//        TODO add in timescale for pgsql
-        return array(
-            'timescale' => 0,
-            'timeslice' => $seconds ?? 0
-        );
+        return [
+            'timescale' => $timescale,
+            'timeslice' => $seconds ?? 0,
+        ];
     }
 
     /**
@@ -48,6 +54,10 @@ trait TimeWrapper
      */
     public function timeSequence($time,$sequence=5)
     {
+        if (strlen($time) === 13) {
+            $time = intval($time/1000);
+        } // if
+
         $date = date('Y:m:d',$time);
         $hour = date('H',$time);
         $minutes = date('i',$time);
