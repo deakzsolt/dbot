@@ -10,8 +10,12 @@ use ccxt\ExchangeError;
 use ccxt\NetworkError;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use Exception;
+use Throwable;
 
+/**
+ * Class DataImporter
+ * @package App\Console\Commands
+ */
 class DataImporter extends Command
 {
     use TimeWrapper;
@@ -104,7 +108,7 @@ class DataImporter extends Command
                     Log::warning('[Network Error] ' . $e->getMessage());
                 } catch (ExchangeError $e) {
                     Log::warning('[Exchange Error] ' . $e->getMessage());
-                } catch (Exception $e) {
+                } catch (Throwable $e) {
                     Log::error('[Error] ' . $e->getMessage());
                 }
                 sleep(5);
@@ -147,5 +151,4 @@ class DataImporter extends Command
 
         return $data;
     }
-
 }
