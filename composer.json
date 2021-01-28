@@ -5,13 +5,13 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": "^7.2.10",
+        "php": "^7.4",
         "ccxt/ccxt": "dev-master",
         "doctrine/dbal": "^2.9",
         "fideloper/proxy": "^4.0",
-        "laravel/framework": "^7.0",
+        "laravel/framework": "^8.12",
         "laravel/helpers": "^1.4",
-        "laravel/tinker": "^2.0"
+        "laravel/tinker": "^2.5"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",
